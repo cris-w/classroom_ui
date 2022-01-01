@@ -56,6 +56,34 @@ export const constantRoutes = [
   },
 
   {
+    path: '/system',
+    component: Layout,
+    redirect: '/system/user',
+    name: '系统管理',
+    meta: { title: '系统管理', icon: 'el-icon-setting' },
+    children: [
+      {
+        path: 'user',
+        name: '用户管理',
+        component: () => import('@/views/system/user/index'),
+        meta: { title: '用户管理', icon: 'user' }
+      },
+      {
+        path: 'role',
+        name: '角色管理',
+        component: () => import('@/views/system/role/index'),
+        meta: { title: '角色管理', icon: 'el-icon-lock' }
+      },
+      {
+        path: 'menu',
+        name: '权限管理',
+        component: () => import('@/views/system/menu/index'),
+        meta: { title: '权限管理', icon: 'el-icon-s-operation' }
+      }
+    ]
+  },
+
+  {
     path: '/example',
     component: Layout,
     redirect: '/example/table',
