@@ -22,13 +22,7 @@
       :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
       style="width: 100%"
     >
-      <el-table-column
-        label="名称"
-        prop="name"
-        sortable="custom"
-        align="left"
-        width="150px"
-      >
+      <el-table-column label="名称" prop="name" align="left" width="150px">
       </el-table-column>
       <el-table-column
         label="权限编码"
@@ -221,20 +215,7 @@ export default {
       list: [],
       total: 0,
       listLoading: false,
-      listQuery: {
-        page: 1,
-        limit: 20,
-        importance: undefined,
-        title: undefined,
-        type: undefined,
-        sort: "+id",
-      },
-      sortOptions: [
-        { label: "ID Ascending", key: "+id" },
-        { label: "ID Descending", key: "-id" },
-      ],
       statusOptions: ["禁用", "正常"],
-      showReviewer: false,
       temp: {
         id: undefined,
         parentId: undefined,
@@ -253,8 +234,6 @@ export default {
         update: "Edit",
         create: "Create",
       },
-      dialogPvVisible: false,
-      pvData: [],
       rules: {
         parentId: [
           { required: true, message: "请选择上级菜单", trigger: "blur" },
@@ -267,7 +246,6 @@ export default {
         ],
         statu: [{ required: true, message: "请选择状态", trigger: "blur" }],
       },
-      downloadLoading: false,
     };
   },
   created() {
@@ -306,16 +284,17 @@ export default {
     createData() {
       this.$refs["dataForm"].validate((valid) => {
         if (valid) {
-          createMenu(this.temp).then(() => {
-            this.list.unshift(this.temp);
-            this.dialogFormVisible = false;
-            this.getList();
-            this.$notify({
-              title: "Success",
-              message: "创建成功",
-              type: "success",
-              duration: 2000,
-            });
+          createMenu(this.temp).then((res) => {
+            if (res.code == 200) {
+              this.dialogFormVisible = false;
+              this.getList();
+              this.$notify({
+                title: "Success",
+                message: "创建成功",
+                type: "success",
+                duration: 2000,
+              });
+            }
           });
         }
       });
@@ -344,15 +323,17 @@ export default {
     updateData() {
       this.$refs["dataForm"].validate((valid) => {
         if (valid) {
-          editMenu(this.temp).then(() => {
-            this.dialogFormVisible = false;
-            this.getList();
-            this.$notify({
-              title: "Success",
-              message: "更新成功",
-              type: "success",
-              duration: 2000,
-            });
+          editMenu(this.temp).then((res) => {
+            if (res.code == 200) {
+              this.dialogFormVisible = false;
+              this.getList();
+              this.$notify({
+                title: "Success",
+                message: "更新成功",
+                type: "success",
+                duration: 2000,
+              });
+            }
           });
         }
       });

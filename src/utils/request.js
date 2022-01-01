@@ -68,7 +68,9 @@ service.interceptors.response.use(
           })
         })
       }
-      return Promise.reject(new Error(res.msg || 'Error'))
+      return Promise.reject(new Error(res.msg || 'Error')).catch(err => {
+        console.log(err);
+      })
     } else {
       return res
     }
@@ -78,9 +80,11 @@ service.interceptors.response.use(
     Message({
       message: error.message,
       type: 'error',
-      duration: 5 * 1000
+      duration: 3 * 1000
     })
-    return Promise.reject(error)
+    return Promise.reject(error).catch(err => {
+      console.log(err);
+    })
   }
 )
 

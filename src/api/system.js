@@ -47,11 +47,42 @@ export function deleteMenu(id) {
 /**
  * 角色模块
  */
-export function getRoleList() {
-  // 用户列表 
+export function getRoleList(listQuery) {
   return request({
-    url: '/sys/role/list',
+    url: `/sys/role/list`,
     method: 'get',
+    params: listQuery
+  })
+}
+// 通过id查询角色详情
+export function getRoleInfo(id) {
+  return request({
+    url: `/sys/role/info/${id}`,
+    method: 'get',
+  })
+}
+// 添加角色
+export function createRole(sysRole) {
+  return request({
+    url: '/sys/role/save',
+    method: 'post',
+    data: sysRole
+  })
+}
+// 更新角色
+export function editRole(sysMenu) {
+  return request({
+    url: '/sys/role/update',
+    method: 'post',
+    data: sysMenu
+  })
+}
+// 删除角色
+export function deleteRole(roleIds) {
+  return request({
+    url: '/sys/role/delete',
+    method: 'post',
+    data: roleIds
   })
 }
 
