@@ -85,15 +85,76 @@ export function deleteRole(roleIds) {
     data: roleIds
   })
 }
+// 修改角色权限
+export function permRole(roleId, menuIds) {
+  return request({
+    url: `/sys/role/perm/${roleId}`,
+    method: 'post',
+    data: menuIds
+  })
+}
 
 /**
  * 用户模块
  */
-export function getUserList(name) {
-  // 用户列表 
+
+// 获取用户列表
+export function getUserList(listQuery) {
   return request({
     url: '/sys/user/list',
     method: 'get',
-    name
+    params: listQuery
+  })
+}
+
+// 通过id查询用户详情
+export function getUserInfo(id) {
+  return request({
+    url: `/sys/user/info/${id}`,
+    method: 'get',
+  })
+}
+
+// 添加用户
+export function createUser(sysUser) {
+  return request({
+    url: '/sys/user/save',
+    method: 'post',
+    data: sysUser
+  })
+}
+
+// 更新用户信息
+export function editUser(sysUser) {
+  return request({
+    url: '/sys/user/update',
+    method: 'post',
+    data: sysUser
+  })
+}
+// 删除用户
+export function deleteUser(userIds) {
+  return request({
+    url: '/sys/user/delete',
+    method: 'post',
+    data: userIds
+  })
+}
+
+// 修改用户角色
+export function rolePerm(userId, roleIds) {
+  return request({
+    url: `/sys/user/role/${userId}`,
+    method: 'post',
+    data: roleIds
+  })
+}
+
+// 重置密码
+export function repass(userId) {
+  return request({
+    url: `/sys/user/repass`,
+    method: 'post',
+    data: userId
   })
 }

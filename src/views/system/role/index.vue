@@ -74,7 +74,7 @@
         class-name="small-padding fixed-width"
       >
         <template slot-scope="{ row }">
-          <el-button type="primary" size="mini" @click="handleUpdate(row.id)">
+          <el-button type="success" size="mini" @click="handlePerm(row.id)">
             分配权限
           </el-button>
           <el-button type="primary" size="mini" @click="handleUpdate(row.id)">
@@ -95,6 +95,7 @@
       @pagination="getList"
     />
 
+    <!-- 添加角色表单 -->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form
         ref="dataForm"
@@ -138,16 +139,38 @@
         </el-button>
       </div>
     </el-dialog>
+
+    <!-- 权限表单 -->
+    <el-dialog title="分配权限" :visible.sync="permDialogFormVisible">
+      <el-form :model="permForm">
+        <el-tree
+          :data="permTreeData"
+          ref="permTree"
+          show-checkbox
+          node-key="id"
+          default-expand-all
+          :check-strictly="true"
+          :props="defaultTreeProps"
+        >
+        </el-tree>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="permDialogFormVisible = false"> 返回 </el-button>
+        <el-button type="primary" @click="perm"> 提交 </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import {
   getRoleList,
+  getMenuList,
   createRole,
   getRoleInfo,
   editRole,
   deleteRole,
+  permRole,
 } from "@/api/system";
 import waves from "@/directive/waves"; // waves directive
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
@@ -156,16 +179,6 @@ export default {
   name: "RoleTable",
   components: { Pagination },
   directives: { waves },
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: "success",
-        draft: "info",
-        deleted: "danger",
-      };
-      return statusMap[status];
-    },
-  },
   data() {
     return {
       tableKey: 0,
@@ -187,6 +200,7 @@ export default {
         statu: undefined,
       },
       dialogFormVisible: false,
+      permDialogFormVisible: false,
       dialogStatus: "",
       textMap: {
         update: "Edit",
@@ -194,6 +208,15 @@ export default {
       },
       // 存放多选数据的id
       multipleSelection: [],
+      // 权限表单
+      permForm: {},
+      // 权限树
+      permTreeData: [],
+      roleId: 0,
+      defaultTreeProps: {
+        children: "children",
+        label: "name",
+      },
       rules: {
         name: [{ required: true, message: "请输入名称", trigger: "blur" }],
         code: [{ required: true, message: "请输入唯一编码", trigger: "blur" }],
@@ -203,6 +226,7 @@ export default {
   },
   created() {
     this.getList();
+    this.getMenuList();
   },
   methods: {
     getList() {
@@ -214,6 +238,12 @@ export default {
         this.listQuery.size = data.size;
         this.listQuery.current = data.current;
         this.listLoading = false;
+      });
+    },
+    getMenuList() {
+      getMenuList().then((res) => {
+        const { data } = res;
+        this.permTreeData = data;
       });
     },
     handleSelectionChange(val) {
@@ -324,6 +354,29 @@ export default {
             message: "已取消删除",
           });
         });
+    },
+    handlePerm(id) {
+      getRoleInfo(id).then((response) => {
+        this.roleId = id;
+        const { data } = response;
+        this.$refs.permTree.setCheckedKeys(data.menuIds);
+        this.permForm = data;
+      });
+      this.permDialogFormVisible = true;
+    },
+    perm() {
+      let menuIds = this.$refs.permTree.getCheckedKeys();
+      permRole(this.roleId, menuIds).then((res) => {
+        if (res.code == 200) {
+          this.permDialogFormVisible = false;
+          this.$notify({
+            title: "Success",
+            message: "更新成功",
+            type: "success",
+            duration: 2000,
+          });
+        }
+      });
     },
   },
 };
