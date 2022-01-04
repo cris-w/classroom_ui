@@ -343,9 +343,6 @@ export default {
                 });
               }
             })
-            .catch((err) => {
-              console.log(err);
-            });
         }
       });
     },
@@ -365,14 +362,16 @@ export default {
         type: "warning",
       })
         .then(() => {
-          deleteUser(ids).then(() => {
-            this.getList();
-            this.$notify({
-              title: "Success",
-              message: "删除成功",
-              type: "success",
-              duration: 2000,
-            });
+          deleteUser(ids).then((res) => {
+            if (res.code === 200) {
+              this.getList();
+              this.$notify({
+                title: "Success",
+                message: "删除成功",
+                type: "success",
+                duration: 2000,
+              });
+            }
           });
         })
         .catch(() => {

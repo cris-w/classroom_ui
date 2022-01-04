@@ -28,3 +28,12 @@ export function getCaptcha() {
     method: 'get'
   })
 }
+
+// 上传头像
+export function uploadAvator(file) {
+  return request({
+    url: `/oos/fileOos/upload/image`,
+    method: 'post',
+    data: file
+  })
+}

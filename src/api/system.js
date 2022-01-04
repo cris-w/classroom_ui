@@ -158,3 +158,12 @@ export function repass(userId) {
     data: userId
   })
 }
+
+// 修改用户头像
+export function editAvatar(bo) {
+  return request({
+    url: `/sys/user/editAvatar`,
+    method: 'post',
+    data: bo
+  })
+}
