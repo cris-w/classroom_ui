@@ -47,7 +47,7 @@ export const constantRoutes = [
     component: () => import('@/views/error-page/401'),
     hidden: true
   },
-
+  //  /
   {
     path: '/',
     component: Layout,
@@ -59,6 +59,7 @@ export const constantRoutes = [
       meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
     }]
   },
+  // settig
   {
     path: '/profile',
     component: Layout,
@@ -73,7 +74,7 @@ export const constantRoutes = [
       }
     ]
   },
-
+  // system
   {
     path: '/system',
     component: Layout,
@@ -101,7 +102,41 @@ export const constantRoutes = [
       }
     ]
   },
-
+  // subject
+  {
+    path: '/subject',
+    component: Layout,
+    redirect: '/subject/list',
+    name: '课程管理',
+    meta: { title: '课程管理', icon: 'education' },
+    children: [
+      {
+        path: 'list',
+        name: '课程列表',
+        component: () => import('@/views/subject/list/index'),
+        meta: { title: '课程列表', icon: 'list' }
+      },
+      {
+        path: 'sava',
+        name: '添加课程',
+        component: () => import('@/views/subject/save/index'),
+        meta: { title: '添加课程', icon: 'tree' }
+      }
+    ]
+  },
+  // 上传学生（批量创建）
+  {
+    path: '/upload',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/upload/index'),
+        name: '上传学生',
+        meta: { title: '上传学生', icon: 'el-icon-upload' }
+      }
+    ]
+  },
   {
     path: '/example',
     component: Layout,

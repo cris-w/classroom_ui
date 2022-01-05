@@ -167,3 +167,12 @@ export function editAvatar(bo) {
     data: bo
   })
 }
+
+// 上传excel
+export function addUserBatch(file) {
+  return request({
+    url: `/sys/user/addUserBatch`,
+    method: 'post',
+    data: file
+  })
+}
