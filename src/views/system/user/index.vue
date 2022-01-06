@@ -330,19 +330,18 @@ export default {
     updateData() {
       this.$refs["dataForm"].validate((valid) => {
         if (valid) {
-          editUser(this.temp)
-            .then((res) => {
-              if (res.code == 200) {
-                this.dialogFormVisible = false;
-                this.getList();
-                this.$notify({
-                  title: "Success",
-                  message: "更新成功",
-                  type: "success",
-                  duration: 2000,
-                });
-              }
-            })
+          editUser(this.temp).then((res) => {
+            if (res.code == 200) {
+              this.dialogFormVisible = false;
+              this.getList();
+              this.$notify({
+                title: "Success",
+                message: "更新成功",
+                type: "success",
+                duration: 2000,
+              });
+            }
+          });
         }
       });
     },
@@ -398,6 +397,7 @@ export default {
       let roleIds = this.$refs.permTree.getCheckedKeys();
       rolePerm(this.userId, roleIds).then((res) => {
         if (res.code == 200) {
+          this.getList();
           this.permDialogFormVisible = false;
           this.$notify({
             title: "Success",

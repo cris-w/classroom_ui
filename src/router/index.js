@@ -107,20 +107,20 @@ export const constantRoutes = [
     path: '/subject',
     component: Layout,
     redirect: '/subject/list',
-    name: '课程管理',
-    meta: { title: '课程管理', icon: 'education' },
+    name: '学科管理',
+    meta: { title: '学科管理', icon: 'education' },
     children: [
       {
         path: 'list',
-        name: '课程列表',
+        name: '学科列表',
         component: () => import('@/views/subject/list/index'),
-        meta: { title: '课程列表', icon: 'list' }
+        meta: { title: '学科列表', icon: 'list' }
       },
       {
         path: 'sava',
-        name: '添加课程',
+        name: '添加学科',
         component: () => import('@/views/subject/save/index'),
-        meta: { title: '添加课程', icon: 'tree' }
+        meta: { title: '添加学科', icon: 'tree' }
       }
     ]
   },
@@ -137,12 +137,57 @@ export const constantRoutes = [
       }
     ]
   },
+  // course
+  {
+    path: '/course',
+    component: Layout,
+    redirect: '/course/list',
+    name: '课程管理',
+    meta: { title: '课程管理', icon: 'skill' },
+    children: [
+      {
+        path: 'list',
+        name: '课程列表',
+        component: () => import('@/views/course/list/index'),
+        meta: { title: '课程列表', icon: 'list' }
+      },
+      {
+        path: 'save',
+        name: '添加课程',
+        component: () => import('@/views/course/add/info'),
+        meta: { title: '添加课程', icon: 'tree' }
+      },
+      {
+        path: 'info/:id',
+        name: 'EduCourseInfoEdit',
+        component: () => import('@/views/course/add/info'),
+        meta: { title: '编辑课程基本信息', noCache: true },
+        hidden: true
+      },
+      {
+        path: 'chapter/:id',
+        name: 'EduCourseChapterEdit',
+        component: () => import('@/views/course/add/chapter'),
+        meta: { title: '编辑课程大纲', noCache: true },
+        hidden: true
+      },
+      {
+        path: 'publish/:id',
+        name: 'EduCoursePublishEdit',
+        component: () => import('@/views/course/add/publish'),
+        meta: { title: '发布课程', noCache: true },
+        hidden: true
+      }
+    ]
+  },
+
   {
     path: '/example',
     component: Layout,
     redirect: '/example/table',
     name: 'Example',
     meta: { title: 'Example', icon: 'el-icon-s-help' },
+    hidden: true,
     children: [
       {
         path: 'table',
@@ -162,6 +207,7 @@ export const constantRoutes = [
   {
     path: '/form',
     component: Layout,
+    hidden: true,
     children: [
       {
         path: 'index',
@@ -181,6 +227,7 @@ export const constantRoutes = [
       title: 'Nested',
       icon: 'nested'
     },
+    hidden: true,
     children: [
       {
         path: 'menu1',

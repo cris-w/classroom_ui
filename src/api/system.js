@@ -8,7 +8,7 @@ import request from '@/utils/request'
 export function getMenuList() {
   return request({
     url: '/sys/menu/list',
-    method: 'get',
+    method: 'get'
   })
 }
 // 添加菜单
