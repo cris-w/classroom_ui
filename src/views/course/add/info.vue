@@ -49,10 +49,7 @@
         />
       </el-form-item>
       <el-form-item label="课程简介">
-        <el-input
-          v-model="courseInfo.description"
-          placeholder=" 示例:这是一个快速入门机器学习的课程"
-        />
+        <tinymce v-model="courseInfo.description" :height="300" />
       </el-form-item>
       <!-- 课程封面 TODO -->
       <el-form-item label="课程封面">
@@ -90,10 +87,18 @@
 </template>
 
 <script>
-import { addCourseInfo, getTeacherList, getClassList } from "@/api/edu/course";
+import {
+  addCourseInfo,
+  getTeacherList,
+  getClassList,
+  getCourseInfo,
+  updateCourseInfo,
+} from "@/api/edu/course";
 import { getToken } from "@/utils/auth";
+import Tinymce from "@/components/Tinymce";
 export default {
   name: "CourseAddInfo",
+  components: { Tinymce },
   data() {
     return {
       saveBtnDisabled: false,
@@ -102,6 +107,7 @@ export default {
       BASE_API: process.env.VUE_APP_BASE_API,
       headers: {},
       courseInfo: {
+        id: undefined,
         title: "",
         classId: "",
         teacherId: "",
@@ -112,11 +118,22 @@ export default {
     };
   },
   created() {
+    if (this.$route.params && this.$route.params.id) {
+      this.courseInfo.id = this.$route.params.id;
+      this.getCourseInfo();
+    }
     this.getTeacherList();
     this.getClassList();
     this.setHeaders();
   },
   methods: {
+    getCourseInfo() {
+      getCourseInfo(this.courseInfo.id).then((res) => {
+        if (res.code === 200) {
+          this.courseInfo = res.data;
+        }
+      });
+    },
     getTeacherList() {
       getTeacherList().then((res) => {
         this.teacherList = res.data;
@@ -133,15 +150,29 @@ export default {
       };
     },
     savaAndUpdate() {
-      addCourseInfo(this.courseInfo).then((res) => {
-        if (res.code === 200) {
-          this.$message({
-            type: "success",
-            message: "添加课程信息成功",
-          });
-          this.$router.push({ path: `/course/chapter/${res.id}` });
-        }
-      });
+      if (this.courseInfo.id) {
+        updateCourseInfo(this.courseInfo).then((res) => {
+          if (res.code === 200) {
+            this.$message({
+              type: "success",
+              message: "修改课程信息成功",
+            });
+            this.$router.push({
+              path: `/course/chapter/${this.courseInfo.id}`,
+            });
+          }
+        });
+      } else {
+        addCourseInfo(this.courseInfo).then((res) => {
+          if (res.code === 200) {
+            this.$message({
+              type: "success",
+              message: "添加课程信息成功",
+            });
+            this.$router.push({ path: `/course/chapter/${res.data}` });
+          }
+        });
+      }
     },
     handleAvatarSuccess(res, file) {
       this.courseInfo.cover = res.data;

@@ -24,3 +24,20 @@ export function getClassList() {
         method: "get"
     })
 }
+
+// 通过课程ID查询课程信息
+export function getCourseInfo(courseId) {
+    return request({
+        url: `/edu/course/getCourseInfo/${courseId}`,
+        method: "get"
+    })
+}
+
+// 修改课程信息
+export function updateCourseInfo(courseInfo) {
+    return request({
+        url: '/edu/course/updateCourseInfo',
+        method: "post",
+        data: courseInfo
+    })
+}
