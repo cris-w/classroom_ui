@@ -13,10 +13,8 @@
       <el-step title="最终发布" icon="el-icon-s-promotion" />
     </el-steps>
 
-    <el-button type="info" round @click="dialogFormVisible = true"
-      >添加章节</el-button
-    >
-    <el-dialog :visible.sync="dialogFormVisible" title="Shipping address">
+    <el-button type="info" round @click="openChapterDialog">添加章节</el-button>
+    <el-dialog :visible.sync="chapterDialogFormVisible" :title="dialogTitle">
       <el-form :model="chapter">
         <el-form-item label="章节名" label-width="120px">
           <el-input v-model="chapter.title" autocomplete="off"></el-input>
@@ -31,23 +29,67 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false"
-          >确 定</el-button
-        >
+        <el-button @click="chapterDialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="saveOrUpdate">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- Video dialog -->
+    <el-dialog :visible.sync="videoDialogFormVisible" title="xxx">
+      <el-form :model="chapter">
+        <el-form-item label="课时名" label-width="120px">
+          <el-input v-model="video.title" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="序号" label-width="120px">
+          <el-input-number
+            :min="0"
+            v-model="video.sort"
+            controls-position="right"
+            placeholder=""
+          />
+        </el-form-item>
+        <el-form-item label="上传视频" label-width="120px"> </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="videoDialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="saveOrUpdateVideo">确 定</el-button>
       </div>
     </el-dialog>
 
     <!-- 显示章节信息 -->
-    <el-tree
-      v-show="chapterList.length > 0"
-      :data="chapterList"
-      :props="chapterProps"
-      accordion
-      default-expand-all
-      highlight-current
-      @node-click="handleNodeClick"
-    />
+    <div class="custom-tree-container">
+      <div class="block">
+        <el-tree
+          v-show="chapterList.length > 0"
+          :data="chapterList"
+          :props="chapterProps"
+          node-key="id"
+          highlight-current
+          :expand-on-click-node="false"
+          @node-click="handleNodeClick"
+        >
+          <span class="custom-tree-node" slot-scope="{ node, data }">
+            <span>{{ node.label }}</span>
+            <span>
+              <el-button
+                v-if="data.children"
+                type="text"
+                size="mini"
+                @click="handleAdd(data.id)"
+              >
+                添加小节
+              </el-button>
+              <el-button type="text" size="mini" @click="handleUpdate(data)">
+                编辑
+              </el-button>
+              <el-button type="text" size="mini" @click="handleDelete(data)">
+                删除
+              </el-button>
+            </span>
+          </span>
+        </el-tree>
+      </div>
+    </div>
 
     <el-form label-width="120px">
       <el-form-item>
@@ -61,7 +103,19 @@
 </template>
 
 <script>
-import { getChapter } from "@/api/edu/chapter";
+import {
+  getChapter,
+  getChapterById,
+  addChapter,
+  updateChapter,
+  delChapterById,
+} from "@/api/edu/chapter";
+import {
+  addVideo,
+  getVideoById,
+  updateVideo,
+  delVideoById,
+} from "@/api/edu/video";
 export default {
   name: "CourseAddChapter",
   data() {
@@ -69,16 +123,30 @@ export default {
       saveBtnDisabled: false,
       chapterList: [],
       courseId: undefined,
-      dialogFormVisible: false,
+      chapterDialogFormVisible: false,
+      videoDialogFormVisible: false,
       chapter: {
+        courseId: undefined,
         title: "",
-        sort: "",
+        sort: 0,
+      },
+      video: {
+        courseId: undefined,
+        chapterId: undefined,
+        title: "",
+        sort: 0,
+        videoSourceId: undefined,
       },
       chapterProps: {
         children: "children",
         label: "title",
       },
     };
+  },
+  computed: {
+    dialogTitle() {
+      return this.chapter.courseId ? "Update" : "Created";
+    },
   },
   created() {
     // 获取路由中的ID
@@ -88,23 +156,171 @@ export default {
     }
   },
   methods: {
+    // ==================== Video ==================
+    resetVideo() {
+      this.video = {
+        courseId: undefined,
+        chapterId: undefined,
+        title: "",
+        sort: 0,
+      };
+    },
+    openVideo(chapterId) {
+      this.resetVideo();
+
+      // 设置章节ID和课程ID
+      this.video.chapterId = chapterId;
+      this.video.courseId = this.courseId;
+
+      this.videoDialogFormVisible = true;
+    },
+    saveOrUpdateVideo() {
+      // 通过判断 video 对象中是否有 id 属性判断为插入 or 更新操作
+      if (this.video.id) {
+        // 更新
+      } else {
+        // 插入
+        this.addVideo();
+      }
+    },
+    addVideo() {
+      addVideo(this.video).then((res) => {
+        if (res.code === 200) {
+          this.$notify({
+            title: "Success",
+            message: "添加成功",
+            type: "success",
+            duration: 2000,
+          });
+          this.getChapter();
+          this.videoDialogFormVisible = false;
+        }
+      });
+    },
+    // ==================== Chapter ==================
+    resetChapter() {
+      this.chapter = {
+        courseId: undefined,
+        title: "",
+        sort: 0,
+      };
+    },
     getChapter() {
       getChapter(this.courseId).then((res) => {
         this.chapterList = res.data;
       });
     },
+    openChapterDialog() {
+      this.resetChapter();
+      this.chapterDialogFormVisible = true;
+    },
+    addChapter() {
+      this.chapter.courseId = this.courseId;
+      addChapter(this.chapter).then((res) => {
+        if (res.code === 200) {
+          this.$notify({
+            title: "Success",
+            message: "添加成功",
+            type: "success",
+            duration: 2000,
+          });
+          this.getChapter();
+          this.chapterDialogFormVisible = false;
+        }
+      });
+    },
+    saveOrUpdate() {
+      if (this.chapter.courseId === undefined) {
+        this.addChapter();
+      } else {
+        this.updateChapter();
+      }
+    },
+    handleNodeClick() {
+      console.log();
+    },
+    updateChapter() {
+      updateChapter(this.chapter).then((res) => {
+        if (res.code === 200) {
+          this.$notify({
+            title: "Success",
+            message: "修改成功",
+            type: "success",
+            duration: 2000,
+          });
+          this.getChapter();
+          this.chapterDialogFormVisible = false;
+        }
+      });
+    },
+    handleAdd(chapterId) {
+      console.log(chapterId);
+      this.openVideo(chapterId);
+    },
+    // ==================== Chapter & Video ==================
+    handleUpdate(data) {
+      // 通过data中是否有 children 判断该节点为章节 or 小节
+      if (data.children) {
+        // 章节
+        getChapterById(data.id).then((res) => {
+          if (res.code === 200) {
+            this.chapter = res.data;
+            this.chapterDialogFormVisible = true;
+          }
+        });
+      } else {
+        // 小节
+      }
+    },
+    handleDelete(data) {
+      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          if (data.children) {
+            // 章节
+            delChapterById(data.id).then((res) => {
+              if (res.code === 200) {
+                this.getChapter();
+                this.$notify({
+                  title: "Success",
+                  message: "删除成功",
+                  type: "success",
+                  duration: 2000,
+                });
+              }
+            });
+          } else {
+            // 小节
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
+    },
+    // ==================== router ==================
     previous() {
       this.$router.push({ path: `/course/info/${this.courseId}` });
     },
     next() {
       this.$router.push({ path: `/course/publish/${this.courseId}` });
     },
-    handleNodeClick() {
-      console.log();
-    },
   },
 };
 </script>
 
-<style>
+<style scoped>
+.custom-tree-node {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  padding-right: 8px;
+}
 </style>
