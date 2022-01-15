@@ -1,5 +1,14 @@
 import request from '@/utils/request'
 
+// 查询课程列表
+export function getCourseList(listQuery) {
+    return request({
+      url: '/edu/course/list',
+      method: 'get',
+      params: listQuery
+    })
+  }
+
 // 添加课程
 export function addCourseInfo(courseInfo) {
     return request({
@@ -39,5 +48,29 @@ export function updateCourseInfo(courseInfo) {
         url: '/edu/course/updateCourseInfo',
         method: "post",
         data: courseInfo
+    })
+}
+
+// 通过id 获取发布课程信息
+export function getCoursePublishInfo(courseId) {
+    return request({
+        url: `/edu/course/getCoursePublishInfo/${courseId}`,
+        method: 'get'
+    })
+}
+
+// 发布课程
+export function publishCourse(courseId) {
+    return request({
+        url: `/edu/course/publishCourse/${courseId}`,
+        method: "post",
+    })
+}
+
+// 删除课程信息
+export function deleteCourse(courseId) {
+    return request({
+        url: `/edu/course/deleteCourse/${courseId}`,
+        method: "get",
     })
 }

@@ -65,6 +65,7 @@
           :props="chapterProps"
           node-key="id"
           highlight-current
+          default-expand-all
           :expand-on-click-node="false"
           @node-click="handleNodeClick"
         >
@@ -178,6 +179,7 @@ export default {
       // 通过判断 video 对象中是否有 id 属性判断为插入 or 更新操作
       if (this.video.id) {
         // 更新
+        this.updateVideo();
       } else {
         // 插入
         this.addVideo();
@@ -189,6 +191,20 @@ export default {
           this.$notify({
             title: "Success",
             message: "添加成功",
+            type: "success",
+            duration: 2000,
+          });
+          this.getChapter();
+          this.videoDialogFormVisible = false;
+        }
+      });
+    },
+    updateVideo() {
+      updateVideo(this.video).then((res) => {
+        if (res.code === 200) {
+          this.$notify({
+            title: "Success",
+            message: "修改成功",
             type: "success",
             duration: 2000,
           });
@@ -254,7 +270,6 @@ export default {
       });
     },
     handleAdd(chapterId) {
-      console.log(chapterId);
       this.openVideo(chapterId);
     },
     // ==================== Chapter & Video ==================
@@ -270,6 +285,12 @@ export default {
         });
       } else {
         // 小节
+        getVideoById(data.id).then((res) => {
+          if (res.code === 200) {
+            this.video = res.data;
+            this.videoDialogFormVisible = true;
+          }
+        });
       }
     },
     handleDelete(data) {
@@ -294,6 +315,17 @@ export default {
             });
           } else {
             // 小节
+            delVideoById(data.id).then((res) => {
+              if (res.code === 200) {
+                this.getChapter();
+                this.$notify({
+                  title: "Success",
+                  message: "删除成功",
+                  type: "success",
+                  duration: 2000,
+                });
+              }
+            });
           }
         })
         .catch(() => {

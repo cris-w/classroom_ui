@@ -202,7 +202,6 @@ export default {
   directives: { waves },
   data() {
     return {
-      tableKey: 0,
       list: [],
       total: 0,
       listLoading: false,

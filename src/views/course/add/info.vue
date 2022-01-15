@@ -65,11 +65,11 @@
             >上传<i class="el-icon-upload el-icon--right"></i
           ></el-button>
 
-          <img
+          <el-image
             v-show="courseInfo.cover !== ''"
+            style="width: 200px; height: 200px"
             :src="courseInfo.cover"
-            width="180px"
-            height="150px"
+            fit="cover"
           />
         </el-upload>
       </el-form-item>
