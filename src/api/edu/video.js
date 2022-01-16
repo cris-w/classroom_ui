@@ -33,3 +33,19 @@ export function delVideoById(videoId) {
         mehtod: "get"
     })
 }
+
+// 删除小节视频
+export function deleteVideo(fileName) {
+    return request({
+        url: `/oos/fileOos/delete/${fileName}`,
+        method: 'get'
+    })
+}
+// 批量删除小节视频
+export function deleteBatch(fileList) {
+    return request({
+        url: '/oos/fileOos/deleteBatch',
+        method: 'post',
+        data: fileList
+    })
+}

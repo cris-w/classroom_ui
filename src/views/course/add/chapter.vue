@@ -35,8 +35,8 @@
     </el-dialog>
 
     <!-- Video dialog -->
-    <el-dialog :visible.sync="videoDialogFormVisible" title="xxx">
-      <el-form :model="chapter">
+    <el-dialog :visible.sync="videoDialogFormVisible" title="课时">
+      <el-form :model="video">
         <el-form-item label="课时名" label-width="120px">
           <el-input v-model="video.title" autocomplete="off"></el-input>
         </el-form-item>
@@ -48,7 +48,23 @@
             placeholder=""
           />
         </el-form-item>
-        <el-form-item label="上传视频" label-width="120px"> </el-form-item>
+        <el-form-item label="上传视频" label-width="120px">
+          <el-upload
+            :headers="headers"
+            :action="BASE_API + 'oos/fileOos/uploadVideo'"
+            :on-success="handleVodUploadSuccess"
+            :on-remove="handleVodRemove"
+            :before-remove="beforeVodRemove"
+            :on-exceed="handleUploadExceed"
+            :file-list="fileList"
+            :limit="1"
+          >
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">
+              只能上传MP4文件，且不超过500MB
+            </div>
+          </el-upload>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="videoDialogFormVisible = false">取 消</el-button>
@@ -116,7 +132,9 @@ import {
   getVideoById,
   updateVideo,
   delVideoById,
+  deleteVideo,
 } from "@/api/edu/video";
+import { getToken } from "@/utils/auth";
 export default {
   name: "CourseAddChapter",
   data() {
@@ -126,6 +144,9 @@ export default {
       courseId: undefined,
       chapterDialogFormVisible: false,
       videoDialogFormVisible: false,
+      BASE_API: process.env.VUE_APP_BASE_API,
+      fileList: [],
+      headers: {},
       chapter: {
         courseId: undefined,
         title: "",
@@ -136,7 +157,8 @@ export default {
         chapterId: undefined,
         title: "",
         sort: 0,
-        videoSourceId: undefined,
+        videoSource: "",
+        videoOriginName: "",
       },
       chapterProps: {
         children: "children",
@@ -155,6 +177,7 @@ export default {
       this.courseId = this.$route.params.id;
       this.getChapter();
     }
+    this.setHeaders();
   },
   methods: {
     // ==================== Video ==================
@@ -164,7 +187,10 @@ export default {
         chapterId: undefined,
         title: "",
         sort: 0,
+        videoSource: "",
+        videoOriginName: "",
       };
+      this.fileList = [];
     },
     openVideo(chapterId) {
       this.resetVideo();
@@ -212,6 +238,37 @@ export default {
           this.videoDialogFormVisible = false;
         }
       });
+    },
+    setHeaders() {
+      this.headers = {
+        Authorization: getToken(),
+      };
+    },
+    handleVodUploadSuccess(response, file, fileList) {
+      this.video.videoSource = response.data.videoSource;
+      this.video.videoOriginName = response.data.videoOriginName;
+      console.log(file);
+      console.log(fileList);
+    },
+    beforeVodRemove(file) {
+      return this.$confirm(`确定移除 ${file.name}？`);
+    },
+    handleVodRemove() {
+      deleteVideo(this.vidoe.videoOriginName).then((res) => {
+        this.$message.success("删除视频成功^-^");
+        // 清空视屏地址 以及 名称
+        this.video.videoSource = "";
+        this.video.videoOriginName = "";
+        // 清空视屏列表
+        this.fileList = [];
+      });
+    },
+    handleUploadExceed(files, fileList) {
+      this.$message.warning(
+        `当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${
+          files.length + fileList.length
+        } 个文件`
+      );
     },
     // ==================== Chapter ==================
     resetChapter() {

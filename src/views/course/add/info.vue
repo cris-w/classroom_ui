@@ -57,7 +57,7 @@
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload"
-          :headers="this.headers"
+          :headers="headers"
           :action="BASE_API + 'oos/fileOos/upload'"
           class="avatar-uploader"
         >
