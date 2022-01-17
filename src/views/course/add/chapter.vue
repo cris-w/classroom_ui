@@ -247,8 +247,6 @@ export default {
     handleVodUploadSuccess(response, file, fileList) {
       this.video.videoSource = response.data.videoSource;
       this.video.videoOriginName = response.data.videoOriginName;
-      console.log(file);
-      console.log(fileList);
     },
     beforeVodRemove(file) {
       return this.$confirm(`确定移除 ${file.name}？`);
@@ -342,6 +340,7 @@ export default {
         });
       } else {
         // 小节
+        this.fileList = [];
         getVideoById(data.id).then((res) => {
           if (res.code === 200) {
             this.video = res.data;

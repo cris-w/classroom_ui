@@ -79,7 +79,7 @@
           <el-button type="primary" size="mini" @click="handleCourse(row.id)">
             编辑课程信息
           </el-button>
-          <el-button type="primary" size="mini" @click="handleChapter(row)">
+          <el-button type="primary" size="mini" @click="handleChapter(row.id)">
             编辑大纲信息
           </el-button>
           <el-button size="mini" type="danger" @click="handleDelete(row.id)">
@@ -143,11 +143,11 @@ export default {
     handleFilter() {
       this.getList();
     },
-    handleCourse(data) {
-      console.log(data);
+    handleCourse(courseId) {
+      this.$router.push({ path: `/course/info/${courseId}` });
     },
-    handleChapter(data) {
-      console.log(data);
+    handleChapter(courseId) {
+      this.$router.push({ path: `/course/chapter/${courseId}` });
     },
     handleDelete(courseId) {
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
