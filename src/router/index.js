@@ -102,26 +102,33 @@ export const constantRoutes = [
       }
     ]
   },
-  // subject
+  // class
   {
-    path: '/subject',
+    path: '/class',
     component: Layout,
-    redirect: '/subject/list',
-    name: '学科管理',
-    meta: { title: '学科管理', icon: 'education' },
+    redirect: '/class/list',
+    name: '班级管理',
+    meta: { title: '班级管理', icon: 'education' },
     children: [
       {
         path: 'list',
-        name: '学科列表',
-        component: () => import('@/views/subject/list/index'),
-        meta: { title: '学科列表', icon: 'list' }
+        name: '班级列表',
+        component: () => import('@/views/class/list/index'),
+        meta: { title: '班级列表', icon: 'list' }
       },
       {
         path: 'sava',
-        name: '添加学科',
-        component: () => import('@/views/subject/save/index'),
-        meta: { title: '添加学科', icon: 'tree' }
-      }
+        name: '添加班级',
+        component: () => import('@/views/class/save/index'),
+        meta: { title: '添加班级', icon: 'tree' }
+      },
+      {
+        path: 'update/:id',
+        name: 'EduClassInfoEdit',
+        component: () => import('@/views/class/save/index'),
+        meta: { title: '编辑班级基本信息', noCache: true },
+        hidden: true
+      },
     ]
   },
   // 上传学生（批量创建）

@@ -39,6 +39,7 @@
     </div>
 
     <el-table
+      v-loading="listLoading"
       ref="multipleTable"
       :data="list"
       tooltip-effect="dark"
