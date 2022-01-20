@@ -10,7 +10,7 @@ NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
 const whiteList = ['/login'] // no redirect whitelist
 
-router.beforeEach(async(to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   // start progress bar
   NProgress.start()
 
@@ -26,15 +26,23 @@ router.beforeEach(async(to, from, next) => {
       next({ path: '/' })
       NProgress.done()
     } else {
-      const hasGetUserInfo = store.getters.name
-      if (hasGetUserInfo) {
+      const hasRoles = store.getters.roles && store.getters.roles.length > 0
+      // const hasGetUserInfo = store.getters.name
+      if (hasRoles) {
         next()
       } else {
         try {
           // get user info
-          await store.dispatch('user/getInfo')
+          // 注意：本系统只设置了三种角色：admin teacher normal
+          const { roles } = await store.dispatch('user/getInfo')
 
-          next()
+          // 通过角色生成动态路由
+          const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
+
+          // 将动态路由加入到路由中
+          router.addRoutes(accessRoutes)
+
+          next({ ...to, replace: true })
         } catch (error) {
           // remove token and go to login page to re-login
           await store.dispatch('user/resetToken')

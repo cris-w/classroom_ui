@@ -28,3 +28,10 @@ export function getCaptcha() {
     method: 'get'
   })
 }
+
+export function getNav() {
+  return request({
+    url: 'sys/menu/nav',
+    method: 'get'
+  }) 
+}

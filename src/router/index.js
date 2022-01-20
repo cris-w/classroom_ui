@@ -47,7 +47,7 @@ export const constantRoutes = [
     component: () => import('@/views/error-page/401'),
     hidden: true
   },
-  //  /
+  //  首页
   {
     path: '/',
     component: Layout,
@@ -74,119 +74,7 @@ export const constantRoutes = [
       }
     ]
   },
-  // system
-  {
-    path: '/system',
-    component: Layout,
-    redirect: '/system/user',
-    name: '系统管理',
-    meta: { title: '系统管理', icon: 'el-icon-setting' },
-    children: [
-      {
-        path: 'user',
-        name: '用户管理',
-        component: () => import('@/views/system/user/index'),
-        meta: { title: '用户管理', icon: 'user' }
-      },
-      {
-        path: 'role',
-        name: '角色管理',
-        component: () => import('@/views/system/role/index'),
-        meta: { title: '角色管理', icon: 'el-icon-lock' }
-      },
-      {
-        path: 'menu',
-        name: '权限管理',
-        component: () => import('@/views/system/menu/index'),
-        meta: { title: '权限管理', icon: 'el-icon-s-operation' }
-      }
-    ]
-  },
-  // class
-  {
-    path: '/class',
-    component: Layout,
-    redirect: '/class/list',
-    name: '班级管理',
-    meta: { title: '班级管理', icon: 'education' },
-    children: [
-      {
-        path: 'list',
-        name: '班级列表',
-        component: () => import('@/views/class/list/index'),
-        meta: { title: '班级列表', icon: 'list' }
-      },
-      {
-        path: 'sava',
-        name: '添加班级',
-        component: () => import('@/views/class/save/index'),
-        meta: { title: '添加班级', icon: 'tree' }
-      },
-      {
-        path: 'update/:id',
-        name: 'EduClassInfoEdit',
-        component: () => import('@/views/class/save/index'),
-        meta: { title: '编辑班级基本信息', noCache: true },
-        hidden: true
-      },
-    ]
-  },
-  // 上传学生（批量创建）
-  {
-    path: '/upload',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/upload/index'),
-        name: '上传学生',
-        meta: { title: '上传学生', icon: 'el-icon-upload' }
-      }
-    ]
-  },
-  // course
-  {
-    path: '/course',
-    component: Layout,
-    redirect: '/course/list',
-    name: '课程管理',
-    meta: { title: '课程管理', icon: 'skill' },
-    children: [
-      {
-        path: 'list',
-        name: '课程列表',
-        component: () => import('@/views/course/list/index'),
-        meta: { title: '课程列表', icon: 'list' }
-      },
-      {
-        path: 'save',
-        name: '添加课程',
-        component: () => import('@/views/course/add/info'),
-        meta: { title: '添加课程', icon: 'tree' }
-      },
-      {
-        path: 'info/:id',
-        name: 'EduCourseInfoEdit',
-        component: () => import('@/views/course/add/info'),
-        meta: { title: '编辑课程基本信息', noCache: true },
-        hidden: true
-      },
-      {
-        path: 'chapter/:id',
-        name: 'EduCourseChapterEdit',
-        component: () => import('@/views/course/add/chapter'),
-        meta: { title: '编辑课程大纲', noCache: true },
-        hidden: true
-      },
-      {
-        path: 'publish/:id',
-        name: 'EduCoursePublishEdit',
-        component: () => import('@/views/course/add/publish'),
-        meta: { title: '发布课程', noCache: true },
-        hidden: true
-      }
-    ]
-  },
+
 
   {
     path: '/example',
@@ -281,6 +169,125 @@ export const constantRoutes = [
         component: () => import('@/views/nested/menu2/index'),
         name: 'Menu2',
         meta: { title: 'menu2' }
+      }
+    ]
+  },
+
+
+]
+
+export const asyncRoutes = [
+
+  // system
+  {
+    path: '/system',
+    component: Layout,
+    redirect: '/system/user',
+    name: '系统管理',
+    meta: { title: '系统管理', icon: 'el-icon-setting', roles: ['admin'] },
+    children: [
+      {
+        path: 'user',
+        name: '用户管理',
+        component: () => import('@/views/system/user/index'),
+        meta: { title: '用户管理', icon: 'user', roles: ['admin'] }
+      },
+      {
+        path: 'role',
+        name: '角色管理',
+        component: () => import('@/views/system/role/index'),
+        meta: { title: '角色管理', icon: 'el-icon-lock', roles: ['admin'] }
+      },
+      {
+        path: 'menu',
+        name: '权限管理',
+        component: () => import('@/views/system/menu/index'),
+        meta: { title: '权限管理', icon: 'el-icon-s-operation', roles: ['admin'] }
+      }
+    ]
+  },
+  // class
+  {
+    path: '/class',
+    component: Layout,
+    redirect: '/class/list',
+    name: '班级管理',
+    meta: { title: '班级管理', icon: 'education', roles: ['admin', 'teacher'] },
+    children: [
+      {
+        path: 'list',
+        name: '班级列表',
+        component: () => import('@/views/class/list/index'),
+        meta: { title: '班级列表', icon: 'list', roles: ['admin', 'teacher'] }
+      },
+      {
+        path: 'sava',
+        name: '添加班级',
+        component: () => import('@/views/class/save/index'),
+        meta: { title: '添加班级', icon: 'tree', roles: ['admin', 'teacher'] }
+      },
+      {
+        path: 'update/:id',
+        name: '编辑班级',
+        component: () => import('@/views/class/save/index'),
+        meta: { title: '编辑班级基本信息', roles: ['admin', 'teacher'], noCache: true },
+        hidden: true
+      },
+    ]
+  },
+  // 上传学生（批量创建）
+  {
+    path: '/upload',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/upload/index'),
+        name: '上传学生',
+        meta: { title: '上传学生', icon: 'el-icon-upload', roles: ['admin', 'teacher'] }
+      }
+    ]
+  },
+  // course
+  {
+    path: '/course',
+    component: Layout,
+    redirect: '/course/list',
+    name: '课程管理',
+    meta: { title: '课程管理', icon: 'skill', roles: ['admin', 'teacher'] },
+    children: [
+      {
+        path: 'list',
+        name: '课程列表',
+        component: () => import('@/views/course/list/index'),
+        meta: { title: '课程列表', icon: 'list', roles: ['admin', 'teacher'] }
+      },
+      {
+        path: 'save',
+        name: '添加课程',
+        component: () => import('@/views/course/add/info'),
+        meta: { title: '添加课程', icon: 'tree', roles: ['admin', 'teacher'] }
+      },
+      {
+        path: 'info/:id',
+        name: 'EduCourseInfoEdit',
+        component: () => import('@/views/course/add/info'),
+        meta: { title: '编辑课程基本信息', roles: ['admin', 'teacher'], noCache: true },
+        hidden: true
+      },
+      {
+        path: 'chapter/:id',
+        name: 'EduCourseChapterEdit',
+        component: () => import('@/views/course/add/chapter'),
+        meta: { title: '编辑课程大纲', roles: ['admin', 'teacher'], noCache: true },
+        hidden: true
+      },
+      {
+        path: 'publish/:id',
+        name: 'EduCoursePublishEdit',
+        component: () => import('@/views/course/add/publish'),
+        meta: { title: '发布课程', roles: ['admin', 'teacher'], noCache: true },
+        hidden: true
       }
     ]
   },

@@ -27,7 +27,7 @@
       <el-table-column
         label="权限编码"
         prop="perms"
-        width="120px"
+        width="150px"
         align="center"
       >
       </el-table-column>
@@ -84,7 +84,7 @@
       <el-table-column
         label="操作"
         align="center"
-        width="230"
+        width="200"
         class-name="small-padding fixed-width"
       >
         <template slot-scope="{ row, $index }">
@@ -117,6 +117,7 @@
             class="filter-item"
             placeholder="请选择上级菜单"
           >
+            <el-option :value="0" label="(无)" />
             <template v-for="item in list">
               <el-option :key="item.id" :label="item.name" :value="item.id" />
               <template v-for="child in item.children">
@@ -303,16 +304,7 @@ export default {
       this.resetTemp();
       getMenuInfo(id).then((response) => {
         const { data } = response;
-        this.temp.id = id;
-        this.temp.parentId = data.parentId;
-        this.temp.name = data.name;
-        this.temp.perms = data.perms;
-        this.temp.icon = data.icon;
-        this.temp.type = data.type;
-        this.temp.path = data.path;
-        this.temp.component = data.component;
-        this.temp.orderNum = data.orderNum;
-        this.temp.statu = data.statu;
+        this.temp = data;
       });
       this.dialogStatus = "update";
       this.dialogFormVisible = true;
