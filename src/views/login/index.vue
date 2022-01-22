@@ -9,7 +9,7 @@
       label-position="left"
     >
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">翻转课堂</h3>
       </div>
 
       <el-form-item prop="username">
@@ -40,7 +40,6 @@
           name="password"
           tabindex="2"
           auto-complete="on"
-          @keyup.enter.native="handleLogin"
         />
         <span class="show-pwd" @click="showPwd">
           <svg-icon
@@ -62,6 +61,7 @@
           style="width: 40%"
           tabindex="3"
           auto-complete="on"
+          @keyup.enter.native="handleLogin"
         />
         <el-image :src="captchaImg" class="captchaImg" @click="getImg">
         </el-image>
@@ -76,8 +76,8 @@
       >
 
       <div class="tips">
-        <span style="margin-right: 20px">username: admin</span>
-        <span> password: any</span>
+        <span style="margin-right: 20px">username: any</span>
+        <span> password: 123456</span>
       </div>
     </el-form>
   </div>
@@ -99,7 +99,7 @@ export default {
       loginForm: {
         username: "admin",
         password: "111111",
-        code: "123",
+        code: "",
         token: "", // redis 中验证码的 key
       },
       loginRules: {
@@ -143,7 +143,7 @@ export default {
           this.$store
             .dispatch("user/login", this.loginForm)
             .then(() => {
-              this.$router.push({ path: this.redirect || "/" });
+              this.$router.push({ path: this.redirect || "/" }, () => {});
               this.loading = false;
             })
             .catch(() => {
