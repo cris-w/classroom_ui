@@ -291,6 +291,19 @@ export const asyncRoutes = [
       }
     ]
   },
+  // knowledge-point
+  {
+    path: '/knowledgePoint',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'KnowledgePoint',
+        component: () => import('@/views/knowledgePoint/index'),
+        meta: { title: '知识点', icon: 'el-icon-ice-cream-round', roles: ['admin', 'teacher'] }
+      }
+    ]
+  },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
