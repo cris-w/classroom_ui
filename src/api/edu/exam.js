@@ -42,3 +42,12 @@ export function delByIds(ids) {
         data: ids
     })
 }
+
+// 获取题库题目（模糊查询）
+export function getQuestionList(listQuery) {
+    return request({
+        url: '/edu/questionBank/list',
+        method: 'get',
+        params: listQuery
+    })
+}

@@ -304,6 +304,34 @@ export const asyncRoutes = [
       }
     ]
   },
+  // question-bank
+  {
+    path: '/questionBank',
+    component: Layout,
+    redirect: '/questionBank/singial  ',
+    name: '题库管理',
+    meta: { title: '题库管理', icon: 'el-icon-refrigerator', roles: ['admin', 'teacher'] },
+    children: [
+      {
+        path: 'singial',
+        name: 'singialChoise',
+        component: () => import('@/views/questionBank/singial/index'),
+        meta: { title: '单选题', icon: 'el-icon-watermelon', roles: ['admin', 'teacher'] }
+      },
+      {
+        path: 'multi',
+        name: 'multiChoise',
+        component: () => import('@/views/questionBank/multi/index'),
+        meta: { title: '多选题', icon: 'el-icon-cherry', roles: ['admin', 'teacher'] }
+      },
+      {
+        path: 'subjective',
+        name: 'subjective',
+        component: () => import('@/views/questionBank/subjective/index'),
+        meta: { title: '主观题', icon: 'el-icon-apple', roles: ['admin', 'teacher'] }
+      }
+    ]
+  },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }

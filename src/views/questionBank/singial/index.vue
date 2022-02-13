@@ -28,21 +28,43 @@
       </el-button>
     </div>
 
-    <!-- 班级列表 -->
+    <!-- 题目列表 -->
     <el-table
       v-loading="listLoading"
-      ref="multipleTable"
       :data="list"
       tooltip-effect="dark"
       style="width: 100%"
       row-key="id"
-      border
       fit
       highlight-current-row
     >
-      <el-table-column label="班级名称" prop="title" align="center">
+      <el-table-column type="expand">
+        <template slot-scope="{ row }">
+          <el-form label-position="left" inline class="demo-table-expand">
+            <el-form-item label="">
+                <li
+                  v-for="item in row.options"
+                  :key="item.id"
+                  style="list-style: upper-alpha"
+                >
+                  {{ item.option }}
+                </li>
+            </el-form-item>
+            <el-form-item label="答案">
+              <div>{{ row.answer }}</div>
+            </el-form-item>
+          </el-form>
+        </template>
       </el-table-column>
-      <el-table-column label="排序" prop="sort" align="center">
+      <el-table-column type="selection" width="45" />
+      <el-table-column label="题目" prop="title" align="center" />
+
+      <el-table-column label="难度" prop="level" align="center">
+        <template slot-scope="{ row }">
+          <el-tag v-if="row.level === 0" type="info">简单</el-tag>
+          <el-tag v-else-if="row.level === 1" type="success">中等</el-tag>
+          <el-tag v-else-if="row.level === 2" type="success">困难</el-tag>
+        </template>
       </el-table-column>
       <el-table-column
         label="操作"
@@ -54,30 +76,21 @@
           <el-button type="primary" size="mini" @click="handleUpdate(row.id)">
             编辑
           </el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(row.id)">
+          <el-button size="mini" type="danger" @click="handleDelete(row)">
             删除
           </el-button>
         </template>
       </el-table-column>
     </el-table>
-
-    <!-- 页码 -->
-    <pagination
-      v-show="total > 0"
-      :total="total"
-      :page.sync="listQuery.current"
-      :limit.sync="listQuery.size"
-      @pagination="getList"
-    />
   </div>
 </template>
 
 <script>
-import { getClassList, deleteClass } from "@/api/edu/class";
+import { getQuestionList } from "@/api/edu/exam";
 import waves from "@/directive/waves"; // waves directive
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
 export default {
-  name: "ClassTable",
+  name: "SingalChoice",
   components: { Pagination },
   directives: { waves },
   data() {
@@ -86,8 +99,10 @@ export default {
       list: [],
       total: 0,
       listQuery: {
-        current: 1,
-        size: 10,
+        title: "",
+        type: 0,
+      },
+      temp: {
         title: "",
       },
     };
@@ -98,12 +113,10 @@ export default {
   methods: {
     getList() {
       this.listLoading = true;
-      getClassList(this.listQuery).then((res) => {
+      getQuestionList(this.listQuery).then((res) => {
         const { data } = res;
-        this.list = data.records;
-        this.total = data.total;
-        this.listQuery.size = data.size;
-        this.listQuery.current = data.current;
+        console.log(data);
+        this.list = data;
         this.listLoading = false;
       });
     },
@@ -116,32 +129,7 @@ export default {
     handleUpdate(id) {
       this.$router.push({ path: `/class/update/${id}` });
     },
-    handleDelete(id) {
-      this.$confirm("此操作将永久删除该记录, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(() => {
-          deleteClass(id).then((res) => {
-            if (res) {
-              this.getList();
-              this.$notify({
-                title: "Success",
-                message: "删除成功",
-                type: "success",
-                duration: 2000,
-              });
-            }
-          });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除",
-          });
-        });
-    },
+    handleDelete(row) {},
   },
 };
 </script>
