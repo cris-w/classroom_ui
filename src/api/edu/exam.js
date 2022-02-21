@@ -51,3 +51,28 @@ export function getQuestionList(listQuery) {
         params: listQuery
     })
 }
+
+// 通过id删除题库信息
+export function deleteById(id) {
+    return request({
+        url: `/edu/questionBank/delete/${id}`,
+        method: 'get',
+    })
+}
+
+// 修改题目信息
+export function updateQuestion(bo) {
+    return request({
+        url: '/edu/questionBank/update',
+        method: 'post',
+        data: bo
+    })
+}
+// 新增题目
+export function saveQuestion(bo) {
+    return request({
+        url: '/edu/questionBank/addQuestion',
+        method: 'post',
+        data: bo
+    })
+}
