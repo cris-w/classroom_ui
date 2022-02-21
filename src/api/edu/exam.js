@@ -60,6 +60,14 @@ export function deleteById(id) {
     })
 }
 
+// 通过id查询题目
+export function getQuestionById(id) {
+    return request({
+        url: `/edu/questionBank/getQuestionById/${id}`,
+        method: 'get'
+    })
+}
+
 // 修改题目信息
 export function updateQuestion(bo) {
     return request({

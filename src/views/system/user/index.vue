@@ -331,7 +331,7 @@ export default {
       this.$refs["dataForm"].validate((valid) => {
         if (valid) {
           editUser(this.temp).then((res) => {
-            if (res.code == 200) {
+            if (res) {
               this.dialogFormVisible = false;
               this.getList();
               this.$notify({

@@ -109,11 +109,7 @@
           <el-input v-model="temp.title" />
         </el-form-item>
         <el-radio-group v-model="temp.answer">
-          <el-form-item
-            v-for="(domain, index) in wordListUsed"
-            label=""
-            :key="index"
-          >
+          <el-form-item v-for="(domain, index) in wordListUsed" :key="index">
             <div style="display: flex; justify-content: flex-left">
               <el-radio-button :label="domain"></el-radio-button>
               <el-input v-model="temp.optionValue[domain]" @input="onInput()" />
@@ -166,6 +162,8 @@ import {
   deleteById,
   getKnowledgePointList,
   saveQuestion,
+  getQuestionById,
+  updateQuestion,
 } from "@/api/edu/exam";
 import waves from "@/directive/waves"; // waves directive
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
@@ -266,19 +264,19 @@ export default {
         level: undefined,
         options: [],
         knowledgePoints: [],
+        optionValue: {
+          A: "",
+          B: "",
+          C: "",
+          D: "",
+          E: "",
+          F: "",
+          G: "",
+        },
       };
-      this.temp.optionValue = {
-        A: "",
-        B: "",
-        C: "",
-        D: "",
-        E: "",
-        F: "",
-        G: "",
-      };
+      this.selectedIds = [];
       this.wordListUsed = ["A", "B", "C", "D"];
       this.woedList = ["E", "F", "G"];
-      this.selectedIds = [];
     },
     handleCreate() {
       this.resetTemp();
@@ -291,24 +289,76 @@ export default {
     createData() {
       this.$refs["dataForm"].validate((valid) => {
         if (valid) {
-          this.temp.options = this.filterOptionValue(this.temp.optionValue);
-          saveQuestion(this.temp).then((res) => {
-            if (res) {
-              this.dialogFormVisible = false;
-              this.$notify({
-                title: "Success",
-                message: "创建成功",
-                type: "success",
-                duration: 2000,
-              });
-              this.getList();
-            }
-          });
+          if (this.temp.answer == undefined) {
+            this.$message.error("请选择正确答案");
+          } else {
+            this.temp.options = this.filterOptionValue(this.temp.optionValue);
+            saveQuestion(this.temp).then((res) => {
+              if (res) {
+                this.dialogFormVisible = false;
+                this.$notify({
+                  title: "Success",
+                  message: "创建成功",
+                  type: "success",
+                  duration: 2000,
+                });
+                this.getList();
+              }
+            });
+          }
         }
       });
     },
     handleUpdate(id) {
-      this.$router.push({ path: `/class/update/${id}` });
+      this.resetTemp();
+      getQuestionById(id).then((res) => {
+        if (res) {
+          const { data } = res;
+          this.temp.id = id;
+          this.temp.title = data.title;
+          this.temp.answer = data.answer;
+          this.temp.type = data.type;
+          this.temp.level = data.level;
+          this.setOptionValue(data.options);
+          if (data.knowledgePoints != null) {
+            // FIXME 此处有bug 无法回显超过两层的知识点，因为el-cascader绑定的值要显示完整的id路径。
+            this.selectedIds = data.knowledgePoints.map((point) => {
+              if (point.parentId != 0) {
+                return new Array(point.parentId, point.id);
+              }
+              return new Array([point.id]);
+            });
+          }
+          this.dialogStatus = "update";
+          this.dialogFormVisible = true;
+          this.$nextTick(() => {
+            this.$refs["dataForm"].clearValidate();
+          });
+        }
+      });
+    },
+    updateData() {
+      this.$refs["dataForm"].validate((valid) => {
+        if (valid) {
+          if (this.temp.answer == undefined) {
+            this.$message.error("请选择正确答案");
+          } else {
+            this.temp.options = this.filterOptionValue(this.temp.optionValue);
+            updateQuestion(this.temp).then((res) => {
+              if (res) {
+                this.dialogFormVisible = false;
+                this.getList();
+                this.$notify({
+                  title: "Success",
+                  message: "更新成功",
+                  type: "success",
+                  duration: 2000,
+                });
+              }
+            });
+          }
+        }
+      });
     },
     handleDelete(id) {
       this.$confirm("此操作将永久删除该题目, 是否继续?", "提示", {
@@ -354,6 +404,7 @@ export default {
       }
       this.wordListUsed.push(this.woedList.shift());
     },
+    // 删除选项
     removeDomain(domain) {
       // 清除答案
       this.temp.answer = undefined;
@@ -387,6 +438,26 @@ export default {
         flag++;
       });
     },
+    // 将通过id获取的options转化为optionValue对象。
+    setOptionValue(arr) {
+      let len = arr.length;
+      if (len < 4) {
+        for (let i = 0; i < 4 - len; i++) {
+          this.woedList.unshift(this.wordListUsed.pop());
+        }
+      }
+      if (len > 4) {
+        for (let i = 0; i < len - 4; i++) {
+          this.wordListUsed.push(this.woedList.shift());
+        }
+      }
+      let flag = 0;
+      arr.forEach((val) => {
+        this.temp.optionValue[this.wordListUsed[flag]] = val.option;
+        flag++;
+      });
+    },
+    // 解决input框无法输入的问题
     onInput() {
       this.$forceUpdate();
     },
