@@ -330,10 +330,10 @@ export default {
               }
               return new Array([point.id]);
             });
+            this.temp.knowledgePoints = data.knowledgePoints.map(
+              (point) => point.id
+            );
           }
-          this.temp.knowledgePoints = data.knowledgePoints.map(
-            (point) => point.id
-          );
           this.dialogStatus = "update";
           this.dialogFormVisible = true;
           this.$nextTick(() => {

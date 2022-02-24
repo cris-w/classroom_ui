@@ -318,7 +318,6 @@ export default {
           this.temp.type = data.type;
           this.temp.level = data.level;
           this.setOptionValue(data.options);
-          this.temp.knowledgePoints = data.knowledgePoints.map(point => point.id);
           if (data.knowledgePoints != null) {
             // FIXME 此处有bug 无法回显超过两层的知识点，因为el-cascader绑定的值要显示完整的id路径。
             this.selectedIds = data.knowledgePoints.map((point) => {
@@ -327,6 +326,9 @@ export default {
               }
               return new Array([point.id]);
             });
+            this.temp.knowledgePoints = data.knowledgePoints.map(
+              (point) => point.id
+            );
           }
           this.dialogStatus = "update";
           this.dialogFormVisible = true;
