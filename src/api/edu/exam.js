@@ -84,3 +84,28 @@ export function saveQuestion(bo) {
         data: bo
     })
 }
+
+// 获取考试列表
+export function getPaperList(listQuery) {
+    return request({
+        url: '/edu/examPaper/list',
+        method: 'get',
+        params: listQuery
+    })
+}
+// 通过ids批量删除
+export function deleteByIds(ids) {
+    return request({
+        url: '/edu/examPaper/delete',
+        method: 'delete',
+        data: ids
+    })
+}
+
+// 通过id获取考试题目详情
+export function getPaperQuestionById(id) {
+    return request({
+        url: `/edu/examPaper/getPaperById/${id}`,
+        method: 'get'
+    })
+}

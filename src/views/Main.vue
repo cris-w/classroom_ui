@@ -35,3 +35,6 @@ export default {
   height: 1000px;
 }
 </style>
+<style lang="scss">
+@import url("../styles/index.scss");
+</style>

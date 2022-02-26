@@ -330,6 +330,35 @@ export const asyncRoutes = [
       }
     ]
   },
+  // exam
+  {
+    path: '/exam',
+    component: Layout,
+    name: '考试管理',
+    redirect: '/exam/bank',
+    meta: { title: '考试管理', icon: 'el-icon-document', roles: ['admin', 'teacher'] },
+    children: [
+      {
+        path: 'bank',
+        name: '试卷库',
+        component: () => import('@/views/exam/index'),
+        meta: { title: '试卷库', icon: 'el-icon-document-checked' }
+      },
+      {
+        path: 'publish',
+        name: '发布考试',
+        component: () => import('@/views/exam/publish'),
+        meta: { title: '发布考试', icon: 'el-icon-document-add' }
+      },
+      {
+        path: 'show/:id',
+        name: '查看试卷',
+        hidden: true,
+        component: () => import('@/views/exam/show'),
+        meta: { title: '查看试卷', noCache: true }
+      }
+    ]
+  },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
