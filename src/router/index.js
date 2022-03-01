@@ -340,7 +340,7 @@ export const asyncRoutes = [
     children: [
       {
         path: 'bank',
-        name: '试卷库',
+        name: 'paperBank',
         component: () => import('@/views/exam/index'),
         meta: { title: '试卷库', icon: 'el-icon-document-checked' }
       },
@@ -356,6 +356,20 @@ export const asyncRoutes = [
         hidden: true,
         component: () => import('@/views/exam/show'),
         meta: { title: '查看试卷', noCache: true }
+      },
+      {
+        path: 'createHand',
+        name: 'createHand',
+        hidden: true,
+        component: () => import('@/views/exam/createHand'),
+        meta: { title: '新建试卷' , noCache: false}
+      },
+      {
+        path: 'questionBank/:model',
+        name: '题库',
+        hidden: true,
+        component: () => import('@/views/exam/questionBank'),
+        meta: { title: '题库', noCache: true }
       }
     ]
   },

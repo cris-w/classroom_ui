@@ -63,7 +63,7 @@
         <template slot-scope="{ row }">
           <el-tag v-if="row.level === 0" type="info">简单</el-tag>
           <el-tag v-else-if="row.level === 1" type="success">中等</el-tag>
-          <el-tag v-else-if="row.level === 2" type="success">困难</el-tag>
+          <el-tag v-else-if="row.level === 2" type="warning">困难</el-tag>
         </template>
       </el-table-column>
       <el-table-column

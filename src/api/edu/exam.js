@@ -109,3 +109,21 @@ export function getPaperQuestionById(id) {
         method: 'get'
     })
 }
+
+// 通过类型 查询题库题目简要信息
+export function getQuestionBriefList(listQuery) {
+    return request({
+        url: '/edu/questionBank/listBrief',
+        method: 'get',
+        params: listQuery
+    })
+}
+
+// 手动创建试卷
+export function createPaper(paperBo) {
+    return request({
+        url: '/edu/examPaper/save',
+        method: 'post',
+        data: paperBo
+    })
+}

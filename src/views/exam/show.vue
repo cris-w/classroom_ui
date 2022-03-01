@@ -38,13 +38,13 @@
 
       <!-- 多选 -->
       <div class="main-question" v-if="paper.mutliChoiceList.length > 0">
+        <div class="main-single--title">二、多选题（共{{paper.mutliChoiceList.length}}题，{{paper.mutliScore}}分）</div>
         <div v-for="(mutli, index) in paper.mutliChoiceList" :key="index">
-          <div class="main-single--title">二、多选题（共{{paper.mutliChoiceList.length}}题，{{paper.mutliScore}}分）</div>
             <!-- 选项内容 -->
             <div class="main-single--choose">
               <!-- 题号 -->
               {{index + 1}}.
-              <span class="colorShallow">(多选题，{{paper.mutliScore}}分)</span>
+              <span class="colorShallow">(多选题，{{mutli.score}}分)</span>
               <!-- 题目 -->
               <p>
                 <br />

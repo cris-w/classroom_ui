@@ -23,7 +23,7 @@
       />
     </div>
 
-    <!-- 表格 -->
+    <!-- 试卷表格 -->
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -56,7 +56,7 @@
       </el-table-column>
     </el-table>
 
-    <!-- 对话框 -->
+    <!-- 创建方式 -->
     <el-dialog
       title="选择创建方式"
       :visible.sync="dialogFormVisible"
@@ -138,17 +138,24 @@ export default {
           });
         });
     },
-    handlePublish() {},
-    handleUpdate() {},
-    handleFilter() {},
+    handlePublish() {
+      console.log("publish");
+    },
+    handleUpdate() {
+      console.log("update");
+    },
+    handleFilter() {
+      this.getList();
+    },
     handleCreate() {
       this.dialogFormVisible = true;
     },
     createPaper() {
-      console.log(this.model);
+      if (this.model === 1) {
+        this.$router.push({ path: "/exam/createHand" });
+      }
     },
     shwoPaper(row) {
-      console.log(row.id);
       this.$router.push({ path: `/exam/show/${row.id}` });
     },
   },
