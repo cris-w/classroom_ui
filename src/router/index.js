@@ -351,6 +351,13 @@ export const asyncRoutes = [
         meta: { title: '发布考试', icon: 'el-icon-document-add' }
       },
       {
+        path: 'handlePublish/:row',
+        name: 'handlePublish',
+        hidden: true,
+        component: () => import('@/views/exam/handlePublish'),
+        meta: { title: '发布考试' }
+      },
+      {
         path: 'show/:id',
         name: '查看试卷',
         hidden: true,
@@ -362,7 +369,14 @@ export const asyncRoutes = [
         name: 'createHand',
         hidden: true,
         component: () => import('@/views/exam/createHand'),
-        meta: { title: '新建试卷' , noCache: false}
+        meta: { title: '新建试卷', noCache: false }
+      },
+      {
+        path: 'createRandom',
+        name: 'createRandom',
+        hidden: true,
+        component: () => import('@/views/exam/createRandom'),
+        meta: { title: '新建试卷', noCache: true }
       },
       {
         path: 'questionBank/:model',

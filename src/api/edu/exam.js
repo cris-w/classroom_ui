@@ -119,11 +119,37 @@ export function getQuestionBriefList(listQuery) {
     })
 }
 
-// 手动创建试卷
+// 查询所有题目简要信息
+export function getAllQuestionBriefList() {
+    return request({
+        url: '/edu/questionBank/getAll',
+        method: 'get'
+    })
+}
+
+// 创建试卷
 export function createPaper(paperBo) {
     return request({
         url: '/edu/examPaper/save',
         method: 'post',
         data: paperBo
+    })
+}
+
+//  发布试卷
+export function publishPaper(examBo) {
+    return request({
+        url: '/edu/examPaper/publishExam',
+        method: 'post',
+        data: examBo
+    })
+}
+
+// 查询发布试卷信息
+export function listPublishExam(listQuery) {
+    return request({
+        url: '/edu/examPaper/listPublishExam',
+        method: 'get',
+        params: listQuery
     })
 }

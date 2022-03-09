@@ -46,7 +46,7 @@
         class-name="small-padding fixed-width"
       >
         <template slot-scope="{ row }">
-          <el-button type="success" size="mini" @click="handlePublish(row.id)">
+          <el-button type="success" size="mini" @click="handlePublish(row)">
             发布
           </el-button>
           <el-button type="primary" size="mini" @click="handleUpdate(row.id)">
@@ -138,8 +138,13 @@ export default {
           });
         });
     },
-    handlePublish() {
-      console.log("publish");
+    handlePublish(row) {
+      let clazz = {};
+      clazz.id = row.id;
+      clazz.title = row.title;
+      this.$router.push({
+        path: `/exam/handlePublish/${JSON.stringify(clazz)}`,
+      });
     },
     handleUpdate() {
       console.log("update");
@@ -153,6 +158,8 @@ export default {
     createPaper() {
       if (this.model === 1) {
         this.$router.push({ path: "/exam/createHand" });
+      } else if (this.model === 2) {
+        this.$router.push({ path: "/exam/createRandom" });
       }
     },
     shwoPaper(row) {

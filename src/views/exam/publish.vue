@@ -1,56 +1,169 @@
 <template>
   <div class="app-container">
-      <div class="paper-container">
-      <div class="item" v-for="item in list" :key="item.id">
-        <div class="context">
-          <h3>{{ item.title }}</h3>
-          <i class="el-icon-user"> {{ item.classId }}</i>
-          <i class="el-icon-time"> 考试时间： xxx - xxx</i>
+    <div class="filter-container">
+      <div class="header">
+        <el-select
+          v-model="listQuery.classId"
+          clearable
+          placeholder="请选择班级"
+          @change="handleFilter"
+        >
+          <el-option
+            v-for="item in clazz"
+            :key="item.id"
+            :label="item.title"
+            :value="item.id"
+          >
+          </el-option>
+        </el-select>
+        <el-input
+          v-model="listQuery.title"
+          placeholder="试卷名"
+          suffix-icon="el-icon-search"
+          style="width: 200px"
+          @keyup.enter.native="handleFilter"
+        />
+      </div>
+    </div>
+
+    <el-empty :image-size="200" v-if="list.length == 0"></el-empty>
+    <!-- table -->
+    <div class="content" v-for="item in list" :key="item.id">
+      <div class="left" @click="toDetail(item.paperId)">
+        <div class="top">
+          <h2 class="title">{{ item.paperTitle }}</h2>
         </div>
-        <div class="handle">
-          <el-button type="success" round>查看</el-button>
+        <div class="clazz">
+          <i class="el-icon-user"></i>
+          {{ item.className }}
         </div>
+        <div class="time">
+          <i class="el-icon-alarm-clock"> </i>
+          考试时间：{{ item.timeStart }} 至 {{ item.timeEnd }}
+        </div>
+      </div>
+      <div class="nums">
+        <p class="piyue">
+          <span> <em class="wait">0</em> / 1 </span>
+          待批阅
+        </p>
+      </div>
+      <div class="option">
+        <el-button type="primary" round @click="read(item.id)">批阅</el-button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { getClassList } from "@/api/edu/course";
+import { listPublishExam } from "@/api/edu/exam";
 export default {
   name: "PublishExam",
   data() {
     return {
+      clazz: [],
       listQuery: {
         title: "",
+        classId: undefined,
       },
       list: [],
     };
   },
   created() {
+    this.getClassList();
     this.getList();
   },
   methods: {
     getList() {
-
-    }
+      listPublishExam(this.listQuery).then((res) => {
+        if (res) {
+          this.list = res.data;
+        }
+      });
+    },
+    getClassList() {
+      getClassList().then((res) => {
+        this.clazz = res.data;
+      });
+    },
+    handleFilter() {
+      this.getList();
+    },
+    toDetail(id) {
+      this.$router.push({ path: `/exam/show/${id}` });
+    },
+    read(id) {
+      console.log(id);
+    },
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>
-.paper-container {
-  .item {
-    display: flex;
-    justify-content: normal;
-    align-items: center;
-    padding: 5px 0;
-    border-bottom: 1px solid #dad6d6;
-    .context {
-      flex: 1;
-      flex-flow: column;
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.content {
+  padding: 20px 10px;
+  border-bottom: 1px solid #f2f2f2;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .left {
+    width: 50%;
+    float: left;
+    .top {
+      max-width: 100%;
+      position: relative;
+      min-height: 22px;
+      margin-bottom: 6px;
+      .title {
+        font-size: 16px;
+        line-height: 22px;
+        max-width: 81%;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+    }
+    .clazz {
+      max-width: 100%;
+      line-height: 20px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #8a8b99;
+    }
+    .time {
+      line-height: 17px;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #8a8b99;
     }
   }
-  .handle {
+  .nums {
+    width: 39%;
+    height: 100%;
+    position: relative;
+    .piyue {
+      text-align: right;
+      font-size: 14px;
+      color: #a8a8b3;
+      margin-right: 10px;
+      .wait {
+        font-size: 28px;
+        color: #4a4a4a;
+        font-weight: bold;
+        font-style: normal;
+      }
+    }
   }
 }
 </style>

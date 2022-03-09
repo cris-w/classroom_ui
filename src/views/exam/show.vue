@@ -100,16 +100,6 @@ export default {
     return {
       paperId: undefined,
       checked: false,
-      quest: [
-        {
-          id: "1",
-          content: "2",
-        },
-        {
-          id: "2",
-          content: "3",
-        },
-      ],
       paper: {
         title: "",
         description: "",
