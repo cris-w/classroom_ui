@@ -40,3 +40,20 @@ export function deleteClass(id) {
         method: 'get',
     })
 }
+
+// 通过学生id查询班级id
+export function getClassIdByStudentId(id) {
+    return request({
+        url: `/studentClass/getClassByStudentId/${id}`,
+        method: 'get'
+    })
+}
+
+// 加入班级
+export function joinClass(studentClass) {
+    return request({
+        url: '/studentClass/joinClass',
+        method: 'post',
+        data: studentClass
+    })
+}

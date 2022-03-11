@@ -3,11 +3,11 @@ import request from '@/utils/request'
 // 查询课程列表
 export function getCourseList(listQuery) {
     return request({
-      url: '/edu/course/list',
-      method: 'get',
-      params: listQuery
+        url: '/edu/course/list',
+        method: 'get',
+        params: listQuery
     })
-  }
+}
 
 // 添加课程
 export function addCourseInfo(courseInfo) {
@@ -71,6 +71,14 @@ export function publishCourse(courseId) {
 export function deleteCourse(courseId) {
     return request({
         url: `/edu/course/deleteCourse/${courseId}`,
+        method: "get",
+    })
+}
+
+// 通过班级id查已发布的课程
+export function getCourseByClassId(classId) {
+    return request({
+        url: `/edu/course/getCourseByClassId/${classId}`,
         method: "get",
     })
 }

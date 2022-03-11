@@ -247,6 +247,7 @@ export default {
     handleVodUploadSuccess(response, file, fileList) {
       this.video.videoSource = response.data.videoSource;
       this.video.videoOriginName = response.data.videoOriginName;
+      console.log(this.video);
     },
     beforeVodRemove(file) {
       return this.$confirm(`确定移除 ${file.name}？`);

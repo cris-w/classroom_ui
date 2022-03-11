@@ -117,6 +117,9 @@ export default {
   .left {
     width: 50%;
     float: left;
+    &:hover {
+      color: red;
+    }
     .top {
       max-width: 100%;
       position: relative;

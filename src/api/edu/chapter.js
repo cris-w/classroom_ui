@@ -41,3 +41,21 @@ export function delChapterById(chapterId) {
         mehtod: "get"
     })
 }
+
+// 获取学生已经观看的小节id
+export function listStudentVideo(listQuery) {
+    return request({
+        url: '/edu/chapter/listStudentVideo',
+        mehtod: "get",
+        params: listQuery
+    })
+}
+
+// 保存学生观看记录
+export function saveStudentVideo(studentVideo) {
+    return request({
+        url: '/edu/chapter/saveStudentVideo',
+        method: "post",
+        data: studentVideo
+    })
+}

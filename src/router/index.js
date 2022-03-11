@@ -387,6 +387,36 @@ export const asyncRoutes = [
       }
     ]
   },
+  // 学生 在线考试
+  {
+    path: '/student',
+    component: Layout,
+    redirect: '/student/index  ',
+    name: 'Student',
+    meta: { title: '我的考试', icon: 'el-icon-refrigerator', roles: ['normal'] },
+    children: [
+      {
+        path: 'exam',
+        name: 'StudentExam',
+        component: () => import('@/views/student/index'),
+        meta: { title: '考试', icon: 'el-icon-watermelon', roles: ['normal'] }
+      },
+      {
+        path: 'chapter/:id',
+        name: 'StudentChapter',
+        hidden: 'true',
+        component: () => import('@/views/student/chapter'),
+        meta: { title: '章节', roles: ['normal'] }
+      },
+      {
+        path: 'video',
+        name: 'StudentVideo',
+        hidden: 'true',
+        component: () => import('@/views/student/video'),
+        meta: { title: '小节视屏', roles: ['normal'] }
+      },
+    ]
+  },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
