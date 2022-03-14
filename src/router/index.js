@@ -355,7 +355,7 @@ export const asyncRoutes = [
         name: 'handlePublish',
         hidden: true,
         component: () => import('@/views/exam/handlePublish'),
-        meta: { title: '发布考试' }
+        meta: { title: '发布考试', noCache: true }
       },
       {
         path: 'show/:id',
@@ -399,21 +399,28 @@ export const asyncRoutes = [
         path: 'exam',
         name: 'StudentExam',
         component: () => import('@/views/student/index'),
-        meta: { title: '考试', icon: 'el-icon-watermelon', roles: ['normal'] }
+        meta: { title: '试卷列表', icon: 'el-icon-watermelon', noCache: true, roles: ['normal'] }
+      },
+      {
+        path: 'paper/:id',
+        name: 'StudentPaper',
+        hidden: 'true',
+        component: () => import('@/views/student/paper'),
+        meta: { title: '在线考试', noCache: true, roles: ['normal'] }
       },
       {
         path: 'chapter/:id',
         name: 'StudentChapter',
         hidden: 'true',
         component: () => import('@/views/student/chapter'),
-        meta: { title: '章节', roles: ['normal'] }
+        meta: { title: '章节', noCache: true, roles: ['normal'] }
       },
       {
         path: 'video',
         name: 'StudentVideo',
         hidden: 'true',
         component: () => import('@/views/student/video'),
-        meta: { title: '小节视屏', roles: ['normal'] }
+        meta: { title: '小节视屏', noCache: true, roles: ['normal'] }
       },
     ]
   },

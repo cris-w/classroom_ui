@@ -42,6 +42,11 @@
           考试时间：{{ item.timeStart }} 至 {{ item.timeEnd }}
         </div>
       </div>
+      <div class="del">
+        <div class="bt">
+          <el-button type="text" round @click="delPub(item.id)">删除</el-button>
+        </div>
+      </div>
       <div class="nums">
         <p class="piyue">
           <span> <em class="wait">0</em> / 1 </span>
@@ -57,7 +62,7 @@
 
 <script>
 import { getClassList } from "@/api/edu/course";
-import { listPublishExam } from "@/api/edu/exam";
+import { listPublishExam, deletePublishById } from "@/api/edu/exam";
 export default {
   name: "PublishExam",
   data() {
@@ -90,6 +95,32 @@ export default {
     handleFilter() {
       this.getList();
     },
+    delPub(id) {
+      this.$confirm("此操作将永久删除该试卷, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          deletePublishById(id).then((res) => {
+            if (res) {
+              this.getList();
+              this.$notify({
+                title: "Success",
+                message: "删除成功",
+                type: "success",
+                duration: 2000,
+              });
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
+    },
     toDetail(id) {
       this.$router.push({ path: `/exam/show/${id}` });
     },
@@ -114,6 +145,9 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  &:hover .del > .bt {
+    display: block;
+  }
   .left {
     width: 50%;
     float: left;
@@ -151,8 +185,15 @@ export default {
       color: #8a8b99;
     }
   }
+  .del {
+    width: 20%;
+    text-align: right;
+    .bt {
+      display: none;
+    }
+  }
   .nums {
-    width: 39%;
+    width: 15%;
     height: 100%;
     position: relative;
     .piyue {

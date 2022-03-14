@@ -153,3 +153,28 @@ export function listPublishExam(listQuery) {
         params: listQuery
     })
 }
+
+// 通过id 删除发布试卷信息
+export function deletePublishById(id) {
+    return request({
+        url: `/edu/examPaper/deletePublish/${id}`,
+        method: 'get',
+    })
+}
+
+// 通过学生ID查询考试记录
+export function listByStudentId(studentId) {
+    return request({
+        url: `/edu/studentExam/listByStudentId/${studentId}`,
+        method: 'get',
+    })
+}
+
+// 新增学生考试记录
+export function saveStudentPaper(studentPaperBo) {
+    return request({
+        url: '/edu/studentExam/save',
+        method: 'post',
+        data: studentPaperBo
+    })
+}
