@@ -62,7 +62,11 @@
 
 <script>
 import { getClassList } from "@/api/edu/course";
-import { listPublishExam, deletePublishById } from "@/api/edu/exam";
+import {
+  listPublishExam,
+  deletePublishById,
+  listStudentExam,
+} from "@/api/edu/exam";
 export default {
   name: "PublishExam",
   data() {
@@ -73,6 +77,7 @@ export default {
         classId: undefined,
       },
       list: [],
+      studentExams: [],
     };
   },
   created() {
@@ -80,6 +85,7 @@ export default {
     this.getList();
   },
   methods: {
+    // 获取试卷信息
     getList() {
       listPublishExam(this.listQuery).then((res) => {
         if (res) {
@@ -87,6 +93,15 @@ export default {
         }
       });
     },
+    // 获取学生考试记录
+    getStudentExam() {
+      listStudentExam().then((res) => {
+        if (res) {
+          this.studentExams = res.data;
+        }
+      });
+    },
+    // 获取班级信息
     getClassList() {
       getClassList().then((res) => {
         this.clazz = res.data;
@@ -121,9 +136,11 @@ export default {
           });
         });
     },
+    // 查看试卷详情
     toDetail(id) {
       this.$router.push({ path: `/exam/show/${id}` });
     },
+    // 批阅
     read(id) {
       console.log(id);
     },

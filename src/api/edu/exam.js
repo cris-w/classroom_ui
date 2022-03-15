@@ -162,6 +162,14 @@ export function deletePublishById(id) {
     })
 }
 
+// 查询所有学生考试记录
+export function listStudentExam() {
+    return request({
+        url: '/edu/studentExam/list',
+        method: 'get',
+    })
+}
+
 // 通过学生ID查询考试记录
 export function listByStudentId(studentId) {
     return request({

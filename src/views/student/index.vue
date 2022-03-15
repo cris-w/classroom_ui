@@ -206,7 +206,6 @@ export default {
           // 强制刷新
           // this.$forceUpdate(this.paperList);
           this.showList = this.paperList;
-          console.log(this.showList);
         }
       });
     },

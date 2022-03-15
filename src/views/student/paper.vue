@@ -1,132 +1,146 @@
 <template>
   <div class="app-container">
-    <div class="app-container__title">试卷详情</div>
-    <el-card class="app-container__main">
-      <div class="main-title">{{ paper.title }}</div>
-      <!-- 单选 -->
-      <div class="main-question" v-if="paper.singleChoiceList.length > 0">
-        <div class="main-single--title">
-          一、单选题（共{{ paper.singleChoiceList.length }}题，
-          {{ paper.singleScore }}分）
-        </div>
-        <div v-for="(single, index) in paper.singleChoiceList" :key="index">
-          <!-- 选项内容 -->
-          <div class="main-single--choose">
-            <!-- 题号 -->
-            {{ index + 1 }}.
-            <span class="colorShallow">(单选题，{{ single.score }}分)</span>
-            <!-- 题目 -->
-            <p>
-              <br />
+    <el-empty
+      :image-size="200"
+      description="已完成考试"
+      v-if="isExam"
+    ></el-empty>
+    <div v-if="!isExam">
+      <div class="app-container__title">试卷详情</div>
+      <el-card class="app-container__main">
+        <div class="main-title">{{ paper.title }}</div>
+        <!-- 单选 -->
+        <div class="main-question" v-if="paper.singleChoiceList.length > 0">
+          <div class="main-single--title">
+            一、单选题（共{{ paper.singleChoiceList.length }}题，
+            {{ paper.singleScore }}分）
+          </div>
+          <div v-for="(single, index) in paper.singleChoiceList" :key="index">
+            <!-- 选项内容 -->
+            <div class="main-single--choose">
+              <!-- 题号 -->
+              {{ index + 1 }}.
+              <span class="colorShallow">(单选题，{{ single.score }}分)</span>
+              <!-- 题目 -->
+              <p>
+                <br />
 
-              {{ single.title }}
-            </p>
-            <!-- 选项 -->
-            <div class="certain-choose">
-              <el-radio-group v-model="paper.singleAnswer[index]" size="mini">
-                <div
-                  class="option"
-                  v-for="(value, i) in single.options"
-                  :key="value.id"
-                >
-                  <el-radio-button
-                    :label="words[i]"
-                    style="cursor: pointer"
-                  ></el-radio-button>
-                  <!-- <el-input size="small"></el-input> -->
-                  <div style="margin-left: 20px">{{ value.option }}</div>
-                </div>
-              </el-radio-group>
+                {{ single.title }}
+              </p>
+              <!-- 选项 -->
+              <div class="certain-choose">
+                <el-radio-group v-model="paper.singleAnswer[index]" size="mini">
+                  <div
+                    class="option"
+                    v-for="(value, i) in single.options"
+                    :key="value.id"
+                  >
+                    <el-radio-button
+                      :label="words[i]"
+                      style="cursor: pointer"
+                    ></el-radio-button>
+                    <!-- <el-input size="small"></el-input> -->
+                    <div style="margin-left: 20px">{{ value.option }}</div>
+                  </div>
+                </el-radio-group>
+              </div>
             </div>
           </div>
+          <!-- 单选结束 -->
         </div>
-        <!-- 单选结束 -->
-      </div>
 
-      <!-- 多选 -->
-      <div class="main-question" v-if="paper.mutliChoiceList.length > 0">
-        <div class="main-single--title">
-          二、多选题（共{{ paper.mutliChoiceList.length }}题，{{
-            paper.mutliScore
-          }}分）
-        </div>
-        <div v-for="(mutli, index) in paper.mutliChoiceList" :key="index">
-          <!-- 选项内容 -->
-          <div class="main-single--choose">
-            <!-- 题号 -->
-            {{ index + 1 }}.
-            <span class="colorShallow">(多选题，{{ mutli.score }}分)</span>
-            <!-- 题目 -->
-            <p>
-              <br />
+        <!-- 多选 -->
+        <div class="main-question" v-if="paper.mutliChoiceList.length > 0">
+          <div class="main-single--title">
+            二、多选题（共{{ paper.mutliChoiceList.length }}题，{{
+              paper.mutliScore
+            }}分）
+          </div>
+          <div v-for="(mutli, index) in paper.mutliChoiceList" :key="index">
+            <!-- 选项内容 -->
+            <div class="main-single--choose">
+              <!-- 题号 -->
+              {{ index + 1 }}.
+              <span class="colorShallow">(多选题，{{ mutli.score }}分)</span>
+              <!-- 题目 -->
+              <p>
+                <br />
 
-              {{ mutli.title }}
-            </p>
-            <!-- 选项 -->
-            <div class="certain-choose">
-              <el-checkbox-group v-model="paper.mutliAnswer[index]" size="mini">
-                <div
-                  class="option"
-                  v-for="(value, i) in mutli.options"
-                  :key="value.id"
+                {{ mutli.title }}
+              </p>
+              <!-- 选项 -->
+              <div class="certain-choose">
+                <el-checkbox-group
+                  v-model="paper.mutliAnswer[index]"
+                  size="mini"
                 >
-                  <el-checkbox-button
-                    :label="words[i]"
-                    style="cursor: pointer"
-                  ></el-checkbox-button>
-                  <div style="margin-left: 20px">{{ value.option }}</div>
-                </div>
-              </el-checkbox-group>
+                  <div
+                    class="option"
+                    v-for="(value, i) in mutli.options"
+                    :key="value.id"
+                  >
+                    <el-checkbox-button
+                      :label="words[i]"
+                      style="cursor: pointer"
+                    ></el-checkbox-button>
+                    <div style="margin-left: 20px">{{ value.option }}</div>
+                  </div>
+                </el-checkbox-group>
+              </div>
             </div>
           </div>
+          <!-- 多选结束 -->
         </div>
-        <!-- 多选结束 -->
-      </div>
 
-      <!-- 简答 -->
-      <div class="main-question" v-if="paper.completionList.length > 0">
-        <div class="main-single--title">
-          三、简答题（共{{ paper.completionList.length }}题，{{
-            paper.completionScore
-          }}分）
-        </div>
-        <div v-for="(item, index) in paper.completionList" :key="index">
-          <!-- 选项内容 -->
-          <div class="main-single--choose">
-            <!-- 题号 -->
-            {{ index + 1 }}.
-            <span class="colorShallow">(简答题，{{ item.score }}分)</span>
-            <!-- 题目 -->
-            <p>
-              <br />
-
-              {{ item.title }}
-            </p>
+        <!-- 简答 -->
+        <div class="main-question" v-if="paper.completionList.length > 0">
+          <div class="main-single--title">
+            三、简答题（共{{ paper.completionList.length }}题，{{
+              paper.completionScore
+            }}分）
           </div>
-          <el-input
-            type="textarea"
-            autosize
-            placeholder="请输入内容"
-            v-model="paper.completionAnswer[index]"
-            style="width: 30%"
-          >
-          </el-input>
+          <div v-for="(item, index) in paper.completionList" :key="index">
+            <!-- 选项内容 -->
+            <div class="main-single--choose">
+              <!-- 题号 -->
+              {{ index + 1 }}.
+              <span class="colorShallow">(简答题，{{ item.score }}分)</span>
+              <!-- 题目 -->
+              <p>
+                <br />
+
+                {{ item.title }}
+              </p>
+            </div>
+            <el-input
+              type="textarea"
+              autosize
+              placeholder="请输入内容"
+              v-model="paper.completionAnswer[index]"
+              style="width: 30%"
+            >
+            </el-input>
+          </div>
         </div>
-      </div>
-      <el-button
-        type="text"
-        @click="submitPaper"
-        class="subBtn"
-        :loading="submit"
-        >交卷</el-button
-      >
-    </el-card>
+        <el-button
+          type="text"
+          @click="submitPaper"
+          class="subBtn"
+          :loading="submit"
+          >交卷</el-button
+        >
+      </el-card>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-import { getPaperQuestionById, saveStudentPaper } from "@/api/edu/exam";
+import {
+  getPaperQuestionById,
+  saveStudentPaper,
+  listByStudentId,
+} from "@/api/edu/exam";
 export default {
   name: "StudentPaper",
   computed: {
@@ -161,14 +175,55 @@ export default {
         score: 0,
         questionList: [],
       },
+      // 该学生是否考过该试卷
+      isExam: true,
+      // 是否离开本页面
+      leave: false,
+      // 是否为系统跳转路由
+      isSys: false,
     };
+  },
+  mounted() {
+    window.addEventListener("blur", this.cheat);
   },
   created() {
     // 获取路由中的ID
     if (this.$route.params && this.$route.params.id) {
       this.paperId = this.$route.params.id;
-      this.getList();
+      this.listByStudentId();
     }
+  },
+  beforeRouteLeave(to, from, next) {
+    if (!this.isExam) {
+      if (this.isSys) {
+        next();
+      } else {
+        // 如果路由跳转
+        this.$confirm("此操作将视为放弃考试, 是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        })
+          .then(() => {
+            this.handleSub();
+            setTimeout(() => {
+              next();
+            }, 2000);
+          })
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "已取消",
+            });
+          });
+      }
+    } else {
+      next();
+    }
+  },
+
+  beforeDestroy() {
+    window.removeEventListener("blur", this.cheat);
   },
   methods: {
     // 获取试卷列表
@@ -199,9 +254,30 @@ export default {
         }
       });
     },
+    // 通过学生ID获取考试记录
+    listByStudentId() {
+      listByStudentId(this.id).then((res) => {
+        if (res) {
+          let paperIds = [];
+          if (res.data.length > 0) {
+            // 获取所有考过的试卷id
+            paperIds = res.data.map((l) => {
+              return l.paperId;
+            });
+            if (paperIds.indexOf(parseInt(this.paperId)) < 0) {
+              this.isExam = false;
+              this.getList();
+            }
+          } else {
+            this.isExam = false;
+            this.getList();
+          }
+        }
+      });
+    },
     // 提交试卷
-    submitPaper() {
-      // this.submit = true;
+    submitPaper(loading) {
+      this.submit = true;
       this.resetTemp();
       // 处理单选题
       for (let i = 0; i < this.paper.singleChoiceList.length; i++) {
@@ -255,12 +331,25 @@ export default {
         this.temp.questionList.push(question);
       }
       console.log(this.temp);
+
+      // if (loading) {
+      //   setTimeout(() => {
+      //     loading.close();
+      //   }, 2000);
+      // }
+
       saveStudentPaper(this.temp).then((res) => {
         if (res) {
+          if (loading) {
+            setTimeout(() => {
+              loading.close();
+            }, 1000);
+          }
           this.$message.success("交卷成功");
+          this.isSys = true;
           setTimeout(() => {
-            this.$router.push("/student/exam")
-          }, 1500);
+            this.$router.push("/student/exam");
+          }, 1000);
         }
       });
     },
@@ -280,6 +369,35 @@ export default {
         score: 0,
         questionList: [],
       };
+    },
+    cheat() {
+      if (!this.isExam) {
+        if (!this.leave) {
+          this.$alert("离开当前页面将会被判定为作弊，并立刻被收卷", "提示", {
+            confirmButtonText: "确定",
+            type: "warning",
+            callback: () => {
+              this.leave = true;
+              this.$message({
+                type: "info",
+                message: "再次离开将被直接判定为作弊",
+              });
+            },
+          });
+        } else {
+          this.handleSub();
+        }
+      }
+    },
+    // 强制交卷
+    handleSub() {
+      const loading = this.$loading({
+        lock: true,
+        text: "系统判定为作弊，强制交卷中...",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      this.submitPaper(loading);
     },
   },
 };
