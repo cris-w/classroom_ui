@@ -145,6 +145,14 @@ export function publishPaper(examBo) {
     })
 }
 
+//  通过试卷ID 获取发布班级ID
+export function listClassIdsByPaperId(paperId) {
+    return request({
+        url: `/edu/examPaper/listClassIdsByPaperId/${paperId}`,
+        method: 'get',
+    })
+}
+
 // 查询发布试卷信息
 export function listPublishExam(listQuery) {
     return request({
@@ -166,6 +174,14 @@ export function deletePublishById(id) {
 export function listStudentExam() {
     return request({
         url: '/edu/studentExam/list',
+        method: 'get',
+    })
+}
+
+// 通过id查询学生考试记录
+export function listStudentExamById(paperId, classId) {
+    return request({
+        url: `/edu/studentExam/listExamById/${paperId}/${classId}`,
         method: 'get',
     })
 }

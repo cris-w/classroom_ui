@@ -149,6 +149,7 @@ export default {
   data() {
     return {
       paperId: undefined,
+      classId: undefined,
       submit: false,
       // 选项
       words: ["A", "B", "C", "D", "E", "F", "G"],
@@ -172,6 +173,7 @@ export default {
       temp: {
         paperId: undefined,
         studentId: undefined,
+        classId: undefined,
         score: 0,
         questionList: [],
       },
@@ -188,8 +190,9 @@ export default {
   },
   created() {
     // 获取路由中的ID
-    if (this.$route.params && this.$route.params.id) {
-      this.paperId = this.$route.params.id;
+    if (this.$route.params && this.$route.params.paperId) {
+      this.paperId = this.$route.params.paperId;
+      this.classId = this.$route.params.classId;
       this.listByStudentId();
     }
   },
@@ -287,11 +290,13 @@ export default {
           this.paper.singleChoiceList[i].answer == this.paper.singleAnswer[i]
         ) {
           this.temp.score += this.paper.singleChoiceList[i].score;
+          question.score = this.paper.singleChoiceList[i].score;
         }
         question.studentId = this.id;
         question.questionId = this.paper.singleChoiceList[i].id;
         question.paperId = this.paperId;
         question.answer = this.paper.singleAnswer[i];
+        question.totalScore = this.paper.singleChoiceList[i].score;
         this.temp.questionList.push(question);
       }
 
@@ -307,11 +312,13 @@ export default {
         // 如果答案正确
         if (this.paper.mutliChoiceList[i].answer === multipleAnswer[i]) {
           this.temp.score += this.paper.mutliChoiceList[i].score;
+          question.score = this.paper.mutliChoiceList[i].score;
         }
         question.studentId = this.id;
         question.questionId = this.paper.mutliChoiceList[i].id;
         question.paperId = this.paperId;
         question.answer = multipleAnswer[i];
+        question.totalScore = this.paper.mutliChoiceList[i].score;
         this.temp.questionList.push(question);
       }
 
@@ -323,11 +330,13 @@ export default {
           this.paper.completionList[i].answer == this.paper.completionAnswer[i]
         ) {
           this.temp.score += this.paper.completionList[i].score;
+          question.score = this.paper.completionList[i].score;
         }
         question.studentId = this.id;
         question.questionId = this.paper.completionList[i].id;
         question.paperId = this.paperId;
         question.answer = this.paper.completionAnswer[i];
+        question.totalScore = this.paper.completionList[i].score;
         this.temp.questionList.push(question);
       }
       console.log(this.temp);
@@ -366,6 +375,7 @@ export default {
       this.temp = {
         paperId: this.paperId,
         studentId: this.id,
+        classId: this.classId,
         score: 0,
         questionList: [],
       };

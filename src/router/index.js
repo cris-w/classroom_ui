@@ -346,9 +346,23 @@ export const asyncRoutes = [
       },
       {
         path: 'publish',
-        name: '发布考试',
+        name: 'PaperList',
         component: () => import('@/views/exam/publish'),
-        meta: { title: '发布考试', icon: 'el-icon-document-add' }
+        meta: { title: '考试列表', icon: 'el-icon-document-add' }
+      },
+      {
+        path: 'read/:paperId/:classId',
+        name: 'ReadPaper',
+        hidden: true,
+        component: () => import('@/views/exam/read'),
+        meta: { title: '批阅详情', noCache: true }
+      },
+      {
+        path: 'check/:info',
+        name: 'PaperCheck',
+        hidden: true,
+        component: () => import('@/views/exam/check'),
+        meta: { title: '批阅试卷', noCache: true }
       },
       {
         path: 'handlePublish/:row',
@@ -402,7 +416,7 @@ export const asyncRoutes = [
         meta: { title: '试卷列表', icon: 'el-icon-watermelon', noCache: true, roles: ['normal'] }
       },
       {
-        path: 'paper/:id',
+        path: 'paper/:paperId/:classId',
         name: 'StudentPaper',
         hidden: 'true',
         component: () => import('@/views/student/paper'),

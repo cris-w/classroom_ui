@@ -49,12 +49,19 @@
       </div>
       <div class="nums">
         <p class="piyue">
-          <span> <em class="wait">0</em> / 1 </span>
+          <span>
+            <em class="wait">{{ item.wait }}</em> / {{ item.all }}
+          </span>
           待批阅
         </p>
       </div>
       <div class="option">
-        <el-button type="primary" round @click="read(item.id)">批阅</el-button>
+        <el-button
+          type="primary"
+          round
+          @click="read(item.paperId, item.classId)"
+          >批阅</el-button
+        >
       </div>
     </div>
   </div>
@@ -90,6 +97,7 @@ export default {
       listPublishExam(this.listQuery).then((res) => {
         if (res) {
           this.list = res.data;
+          this.getStudentExam();
         }
       });
     },
@@ -98,6 +106,24 @@ export default {
       listStudentExam().then((res) => {
         if (res) {
           this.studentExams = res.data;
+          if (this.list) {
+            this.list.forEach((l) => {
+              // 等待批阅数量
+              l.wait = 0;
+              // 总试卷数
+              l.all = 0;
+              this.studentExams.forEach((e) => {
+                if (e.paperId === l.paperId && e.classId === l.classId) {
+                  l.all++;
+                  if (e.state == 0) {
+                    l.wait++;
+                  }
+                }
+              });
+            });
+          }
+          // 强制刷新
+          this.$forceUpdate(this.list);
         }
       });
     },
@@ -141,8 +167,8 @@ export default {
       this.$router.push({ path: `/exam/show/${id}` });
     },
     // 批阅
-    read(id) {
-      console.log(id);
+    read(paperId, classId) {
+      this.$router.push(`/exam/read/${paperId}/${classId}`);
     },
   },
 };

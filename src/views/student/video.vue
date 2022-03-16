@@ -30,7 +30,6 @@ export default {
   created() {
     if (this.$route.query && this.$route.query.source) {
       this.source = JSON.parse(this.$route.query.source);
-      console.log(this.source);
       // 如果不存在视频 则直接插入记录
       if (!this.source.videoSource) {
         this.hasWatched();

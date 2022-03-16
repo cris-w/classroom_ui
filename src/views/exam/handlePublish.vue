@@ -67,7 +67,7 @@
 
 <script>
 import { getClassList } from "@/api/edu/course";
-import { publishPaper } from "@/api/edu/exam";
+import { publishPaper, listClassIdsByPaperId } from "@/api/edu/exam";
 export default {
   name: "handlePublish",
   data() {
@@ -102,6 +102,7 @@ export default {
       props: {
         label: "title",
       },
+      // 班级
       data: [],
     };
   },
@@ -118,6 +119,20 @@ export default {
     getClassList() {
       getClassList().then((res) => {
         this.data = res.data;
+        this.disablePublishedClassIds();
+      });
+    },
+    // 禁用已发布的班级ID
+    disablePublishedClassIds() {
+      listClassIdsByPaperId(this.temp.paperId).then((res) => {
+        let { data } = res;
+        if (data) {
+          this.data.forEach((d) => {
+            if (data.indexOf(d.id) != -1) {
+              d.disabled = true;
+            }
+          });
+        }
       });
     },
     submitForm(formName) {

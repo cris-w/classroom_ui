@@ -228,7 +228,7 @@ export default {
           }
         )
           .then(() => {
-            this.$router.push(`/student/paper/${obj.paperId}`);
+            this.$router.push(`/student/paper/${obj.paperId}/${this.classId}`);
           })
           .catch(() => {
             this.$message({
