@@ -37,10 +37,10 @@
       <el-table-column align="center" label="姓名" prop="studentName" />
       <el-table-column align="center" label="分数" prop="score" />
       <el-table-column align="center" label="批阅时间">
-        <template slot-scope="row"> {{ row.readTime || "---" }} </template>
+        <template slot-scope="{ row }"> {{ row.readTime || "---" }} </template>
       </el-table-column>
       <el-table-column align="center" label="批阅人">
-        <template slot-scope="row"> {{ row.readName || "---" }} </template>
+        <template slot-scope="{ row }"> {{ row.readName || "---" }} </template>
       </el-table-column>
       <el-table-column align="center" label="状态">
         <template slot-scope="{ row }">
@@ -51,7 +51,9 @@
       <el-table-column align="center" label="操作">
         <template slot-scope="{ row }">
           <el-button type="text" @click="read(row)"> 批阅 </el-button>
-          <el-button type="text" @click="back(row)"> 打回 </el-button>
+          <el-button type="text" @click="back(row.paperId, row.studentId)">
+            打回
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -59,7 +61,7 @@
 </template>
 
 <script>
-import { listStudentExamById } from "@/api/edu/exam";
+import { listStudentExamById, removeExamById } from "@/api/edu/exam";
 export default {
   name: "ReadPaper",
   data() {
@@ -106,13 +108,19 @@ export default {
       info.paperId = row.paperId;
       info.studentId = row.studentId;
       info.studentName = row.studentName;
+      info.classId = this.classId;
       this.$router.push({
         path: `/exam/check/${JSON.stringify(info)}`,
       });
     },
     // 打回
-    back(row) {
-      console.log(row);
+    back(paperId, studentId) {
+      removeExamById(paperId, studentId).then((res) => {
+        if (res) {
+          this.$message.success("打回成功");
+          this.getList();
+        }
+      });
     },
   },
 };

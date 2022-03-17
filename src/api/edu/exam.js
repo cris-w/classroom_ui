@@ -186,10 +186,18 @@ export function listStudentExamById(paperId, classId) {
     })
 }
 
-// 通过学生ID查询考试记录
+// 通过学生ID 获取该学生考过的所有试卷
 export function listByStudentId(studentId) {
     return request({
         url: `/edu/studentExam/listByStudentId/${studentId}`,
+        method: 'get',
+    })
+}
+
+// 通过学生ID 和 班级ID 获取考试题目信息
+export function listQuestionById(studentId, paperId) {
+    return request({
+        url: `/edu/studentExam/listQuestionById/${studentId}/${paperId}`,
         method: 'get',
     })
 }
@@ -200,5 +208,30 @@ export function saveStudentPaper(studentPaperBo) {
         url: '/edu/studentExam/save',
         method: 'post',
         data: studentPaperBo
+    })
+}
+
+// 修改学生考试 题目成绩 updateStudentQuestion
+export function updateStudentQuestion(question) {
+    return request({
+        url: '/edu/studentExam/updateStudentQuestion',
+        method: 'post',
+        data: question
+    })
+}
+
+// 批阅试卷
+export function updateStudentExam(exam) {
+    return request({
+        url: '/edu/studentExam/updateStudentExam',
+        method: 'post',
+        data: exam
+    })
+}
+// 打回试卷
+export function removeExamById(paperId, studentId) {
+    return request({
+        url: `/edu/studentExam/remove/${paperId}/${studentId}`,
+        method: 'get'
     })
 }
