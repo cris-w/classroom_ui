@@ -13,9 +13,10 @@
         class="filter-item"
         type="primary"
         icon="el-icon-search"
-        @click="handleFilter"
+        style="margin-left: 10px"
+        @click="handleFilter()"
       >
-        Search
+        搜索
       </el-button>
       <el-button
         class="filter-item"
@@ -24,7 +25,7 @@
         icon="el-icon-edit"
         @click="handleCreate"
       >
-        Add
+        新增用户
       </el-button>
       <el-button
         class="filter-item"
@@ -34,7 +35,7 @@
         :disabled="delbtnStatus"
         @click="handleDelete(null)"
       >
-        Delete
+        统一删除
       </el-button>
     </div>
 
@@ -224,8 +225,8 @@ export default {
       permDialogFormVisible: false,
       dialogStatus: "",
       textMap: {
-        update: "Edit",
-        create: "Create",
+        update: "编辑",
+        create: "创建用户",
       },
       // 存放多选数据的id
       multipleSelection: [],
@@ -252,7 +253,7 @@ export default {
     this.getRoleList();
   },
   methods: {
-    getList() {
+    getList(flag = false) {
       this.listLoading = true;
       getUserList(this.listQuery).then((response) => {
         const { data } = response;
@@ -261,6 +262,9 @@ export default {
         this.listQuery.size = data.size;
         this.listQuery.current = data.current;
         this.listLoading = false;
+        if (flag) {
+          this.$message.success("查找成功！");
+        }
       });
     },
     getRoleList() {
@@ -309,7 +313,7 @@ export default {
       });
     },
     handleFilter() {
-      this.getList();
+      this.getList(true);
     },
     handleUpdate(id) {
       this.resetTemp();
@@ -355,7 +359,7 @@ export default {
           ids.push(row.id);
         });
       }
-      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+      this.$confirm("此操作将永久删除该用户, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",

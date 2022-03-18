@@ -13,7 +13,13 @@
       <el-step title="最终发布" icon="el-icon-s-promotion" />
     </el-steps>
 
-    <el-button type="info" round @click="openChapterDialog">添加章节</el-button>
+    <el-button
+      type="success"
+      round
+      @click="openChapterDialog"
+      style="margin-left: 130px"
+      >添加章节</el-button
+    >
     <el-dialog :visible.sync="chapterDialogFormVisible" :title="dialogTitle">
       <el-form :model="chapter">
         <el-form-item label="章节名" label-width="120px">
@@ -74,7 +80,10 @@
 
     <!-- 显示章节信息 -->
     <div class="custom-tree-container">
-      <div class="block">
+      <div
+        class="block"
+        style="padding: 20px 170px 20px 110px; height: 300px; overflow-y: auto"
+      >
         <el-tree
           v-show="chapterList.length > 0"
           :data="chapterList"
@@ -168,7 +177,7 @@ export default {
   },
   computed: {
     dialogTitle() {
-      return this.chapter.courseId ? "Update" : "Created";
+      return this.chapter.courseId ? "编辑小节" : "添加章节";
     },
   },
   created() {

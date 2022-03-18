@@ -8,7 +8,7 @@
         icon="el-icon-edit"
         @click="handleCreate"
       >
-        Add
+        新增权限
       </el-button>
     </div>
 
@@ -21,6 +21,7 @@
       highlight-current-row
       :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
       style="width: 100%"
+      height="500px"
     >
       <el-table-column label="名称" prop="name" align="left" width="150px">
       </el-table-column>
@@ -89,14 +90,14 @@
       >
         <template slot-scope="{ row, $index }">
           <el-button type="primary" size="mini" @click="handleUpdate(row.id)">
-            Edit
+            编辑
           </el-button>
           <el-button
             size="mini"
             type="danger"
             @click="handleDelete(row, $index)"
           >
-            Delete
+            删除
           </el-button>
         </template>
       </el-table-column>
@@ -109,7 +110,12 @@
         :model="temp"
         label-position="right"
         label-width="80px"
-        style="width: 400px; margin-left: 50px"
+        style="
+          height: 350px;
+          overflow-y: scroll;
+          margin-left: 50px;
+          padding-right: 20px;
+        "
       >
         <el-form-item label="上级菜单" prop="parentId">
           <el-select
@@ -232,8 +238,8 @@ export default {
       dialogFormVisible: false,
       dialogStatus: "",
       textMap: {
-        update: "Edit",
-        create: "Create",
+        update: "编辑",
+        create: "新增权限",
       },
       rules: {
         parentId: [
@@ -331,7 +337,7 @@ export default {
       });
     },
     handleDelete(row) {
-      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+      this.$confirm("此操作将永久删除该权限, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",

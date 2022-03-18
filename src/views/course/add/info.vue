@@ -18,6 +18,7 @@
         <el-input
           v-model="courseInfo.title"
           placeholder=" 示例:机器学习项目课:从基础到搭建项目"
+          maxlength="15"
         />
       </el-form-item>
       <el-form-item label="所属班级">

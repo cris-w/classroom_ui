@@ -7,7 +7,7 @@
       style="width: 200px"
     />
     <el-button type="primary" round class="addBtn" @click="openDialog"
-      >添加章节</el-button
+      >添加知识点</el-button
     >
 
     <!-- 树形结构 -->
@@ -19,6 +19,7 @@
       default-expand-all
       :expand-on-click-node="false"
       :filter-node-method="filterNode"
+      style="margin-top: 20px"
     >
       <span class="custom-tree-node" slot-scope="{ data }">
         <span>{{ data.title }}</span>
@@ -92,8 +93,8 @@ export default {
       filterText: "",
       dialogStatus: "",
       textMap: {
-        update: "Edit",
-        create: "Create",
+        update: "编辑",
+        create: "添加章节",
       },
       temp: {
         title: "",
@@ -161,7 +162,7 @@ export default {
       this.getChildrenIds(data);
       console.log(this.delIds);
       this.$confirm(
-        "若该知识点下存在子级知识点将一并删除，确认删除？, 是否继续?",
+        "若该知识点下存在子级知识点将一并删除，确认删除？",
         "提示",
         {
           confirmButtonText: "确定",
@@ -241,6 +242,6 @@ export default {
   padding-right: 8px;
 }
 .addBtn {
-  margin-left: 50px;
+  margin-left: 10px;
 }
 </style>

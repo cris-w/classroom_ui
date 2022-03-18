@@ -13,9 +13,10 @@
         class="filter-item"
         type="primary"
         icon="el-icon-search"
+        style="margin-left: 10px"
         @click="handleFilter"
       >
-        Search
+        搜索
       </el-button>
       <el-button
         class="filter-item"
@@ -24,7 +25,7 @@
         icon="el-icon-edit"
         @click="handleCreate"
       >
-        Add
+        添加班级
       </el-button>
     </div>
 
@@ -96,7 +97,7 @@ export default {
     this.getList();
   },
   methods: {
-    getList() {
+    getList(flag = false) {
       this.listLoading = true;
       getClassList(this.listQuery).then((res) => {
         const { data } = res;
@@ -105,10 +106,13 @@ export default {
         this.listQuery.size = data.size;
         this.listQuery.current = data.current;
         this.listLoading = false;
+        if (flag) {
+          this.$message.success("搜索成功！");
+        }
       });
     },
     handleFilter() {
-      this.getList();
+      this.getList(true);
     },
     handleCreate() {
       this.$router.push({ path: "/class/sava" });

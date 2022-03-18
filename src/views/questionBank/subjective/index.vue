@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-input
         v-model="listQuery.title"
-        placeholder="Title"
+        placeholder="请输入题目搜索"
         style="width: 200px"
         class="filter-item"
         @keyup.enter.native="handleFilter"
@@ -13,9 +13,10 @@
         class="filter-item"
         type="primary"
         icon="el-icon-search"
+        style="margin-left: 10px"
         @click="handleFilter"
       >
-        Search
+        搜索
       </el-button>
       <el-button
         class="filter-item"
@@ -24,7 +25,7 @@
         icon="el-icon-edit"
         @click="handleCreate"
       >
-        Add
+        添加
       </el-button>
     </div>
 

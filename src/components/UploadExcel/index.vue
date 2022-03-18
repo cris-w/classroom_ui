@@ -15,11 +15,10 @@
       @dragover="handleDragover"
       @dragenter="handleDragover"
     >
-      Drop excel file here or
+      请将Excel文件拖入或
       <el-button
         :loading="loading"
         style="margin-left: 16px"
-        size="mini"
         type="primary"
         @click="handleUpload"
       >

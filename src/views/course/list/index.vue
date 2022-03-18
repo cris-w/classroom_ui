@@ -13,9 +13,10 @@
         class="filter-item"
         type="primary"
         icon="el-icon-search"
+        style="margin-left: 10px"
         @click="handleFilter"
       >
-        Search
+        搜索
       </el-button>
     </div>
 
@@ -26,6 +27,7 @@
       tooltip-effect="dark"
       style="width: 100%"
       row-key="id"
+      height="380px"
       border
       fit
       highlight-current-row

@@ -15,15 +15,27 @@
 
     <el-row :gutter="20" type="flex" justify="center">
       <el-col :span="8">
-        <el-card :body-style="{ padding: '0px' }">
-          <el-image :src="coursePublish.cover" fit="cover" />
+        <el-card :body-style="{ padding: '0px', height: '300px' }">
+          <el-image
+            :src="coursePublish.cover"
+            fit="cover"
+            style="width: 100%; height: 300px"
+          />
         </el-card>
       </el-col>
       <el-col :span="8">
-        <el-card :body-style="{ padding: '0px' }">
+        <el-card :body-style="{ padding: '0px', height: '300px' }">
           <div style="padding: 14px">
             <h2>{{ coursePublish.title }}</h2>
-            <p v-html="coursePublish.description"></p>
+            <div
+              style="
+                width: 330px;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+              "
+              v-html="coursePublish.description"
+            ></div>
             <p class="gray">
               <span>共{{ coursePublish.lessonNum }}课时</span>
             </p>
@@ -36,14 +48,12 @@
       </el-col>
     </el-row>
 
-    <el-form label-width="120px">
-      <el-form-item>
-        <el-button @click="previous">上一步</el-button>
-        <el-button :disabled="saveBtnDisabled" type="primary" @click="next">
-          发布课程
-        </el-button>
-      </el-form-item>
-    </el-form>
+    <el-button @click="previous" style="margin-left: 200px; margin-top: 20px"
+      >上一步</el-button
+    >
+    <el-button :disabled="saveBtnDisabled" type="primary" @click="next">
+      发布课程
+    </el-button>
   </div>
 </template>
 

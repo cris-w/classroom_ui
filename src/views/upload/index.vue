@@ -1,5 +1,14 @@
 <template>
   <div class="app-container">
+    <h2 style="text-align: center; margin-top: 0">上传学生</h2>
+    <el-alert
+      title="提示"
+      type="warning"
+      description="请上传excel文件，下方表格会显示学生的姓名"
+      style="width: 50%; margin: 0 auto; margin-bottom: 20px"
+      show-icon
+    >
+    </el-alert>
     <upload-excel-component
       :on-success="handleSuccess"
       :before-upload="beforeUpload"
@@ -9,6 +18,7 @@
       border
       highlight-current-row
       style="width: 100%; margin-top: 20px"
+      height="280px"
     >
       <el-table-column
         v-for="item of tableHeader"

@@ -1,6 +1,7 @@
 <template>
   <div class="app-container">
-    <h2 style="text-align: center">创建班级</h2>
+    <h2 style="text-align: center" v-if="classId">编辑班级</h2>
+    <h2 style="text-align: center" v-else>创建班级</h2>
 
     <el-form
       label-width="120px"

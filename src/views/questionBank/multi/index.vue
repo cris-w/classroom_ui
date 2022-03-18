@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-input
         v-model="listQuery.title"
-        placeholder="Title"
+        placeholder="请输入题目搜索"
         style="width: 200px"
         class="filter-item"
         @keyup.enter.native="handleFilter"
@@ -13,9 +13,10 @@
         class="filter-item"
         type="primary"
         icon="el-icon-search"
+        style="margin-left: 10px"
         @click="handleFilter"
       >
-        Search
+        搜索
       </el-button>
       <el-button
         class="filter-item"
@@ -24,7 +25,7 @@
         icon="el-icon-edit"
         @click="handleCreate"
       >
-        Add
+        添加
       </el-button>
     </div>
 
@@ -111,14 +112,26 @@
         <el-checkbox-group v-model="answer">
           <el-form-item v-for="(domain, index) in wordListUsed" :key="index">
             <div style="display: flex; justify-content: flex-left">
-              <el-checkbox-button :label="domain"></el-checkbox-button>
+              <el-radio-button
+                :label="domain"
+                style="margin-right: 5px"
+              ></el-radio-button>
               <el-input v-model="temp.optionValue[domain]" @input="onInput()" />
-              <el-button @click.prevent="removeDomain(domain)">删除</el-button>
+              <el-button
+                @click.prevent="removeDomain(domain)"
+                style="margin-left: 5px"
+                >删除</el-button
+              >
             </div>
           </el-form-item>
         </el-checkbox-group>
         <el-form-item>
-          <el-button type="info" circle @click="addOption"> + </el-button>
+          <el-button
+            icon="el-icon-plus"
+            circle
+            @click="addOption"
+            type="primary"
+          ></el-button>
         </el-form-item>
         <el-form-item label="难度" prop="level">
           <el-radio-group v-model="temp.level">
