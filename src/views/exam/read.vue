@@ -16,7 +16,6 @@
         style="margin-left: 20px"
         type="primary"
         icon="el-icon-search"
-        size="small"
         round
         @click="handleFilter"
       >
@@ -50,8 +49,8 @@
       </el-table-column>
       <el-table-column align="center" label="操作">
         <template slot-scope="{ row }">
-          <el-button type="text" @click="read(row)"> 批阅 </el-button>
-          <el-button type="text" @click="back(row.paperId, row.studentId)">
+          <el-button type="primary" @click="read(row)"> 批阅 </el-button>
+          <el-button type="danger" @click="back(row.paperId, row.studentId)">
             打回
           </el-button>
         </template>
@@ -115,12 +114,25 @@ export default {
     },
     // 打回
     back(paperId, studentId) {
-      removeExamById(paperId, studentId).then((res) => {
-        if (res) {
-          this.$message.success("打回成功");
-          this.getList();
-        }
-      });
+      this.$confirm("此操作将该学生此次作答打回, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          removeExamById(paperId, studentId).then((res) => {
+            if (res) {
+              this.$message.success("打回成功");
+              this.getList();
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消打回",
+          });
+        });
     },
   },
 };

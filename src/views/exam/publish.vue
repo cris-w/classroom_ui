@@ -19,10 +19,15 @@
         <el-input
           v-model="listQuery.title"
           placeholder="试卷名"
-          suffix-icon="el-icon-search"
-          style="width: 200px"
+          style="width: 250px"
           @keyup.enter.native="handleFilter"
-        />
+        >
+          <el-button
+            slot="append"
+            icon="el-icon-search"
+            @click="handleFilter"
+          ></el-button>
+        </el-input>
       </div>
     </div>
 
@@ -195,7 +200,7 @@ export default {
     width: 50%;
     float: left;
     &:hover {
-      color: red;
+      color: rgb(80, 177, 121);
     }
     .top {
       max-width: 100%;

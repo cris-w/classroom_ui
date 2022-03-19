@@ -17,10 +17,15 @@
       <el-input
         v-model="listQuery.title"
         placeholder="试卷名"
-        suffix-icon="el-icon-search"
-        style="width: 200px"
+        style="width: 250px"
         @keyup.enter.native="handleFilter"
-      />
+      >
+        <el-button
+          slot="append"
+          icon="el-icon-search"
+          @click="handleFilter"
+        ></el-button>
+      </el-input>
     </div>
 
     <!-- 试卷表格 -->
@@ -49,7 +54,12 @@
           <el-button type="success" size="mini" @click="handlePublish(row)">
             发布
           </el-button>
-          <el-button type="primary" size="mini" @click="handleUpdate(row.id)">
+          <el-button
+            type="primary"
+            size="mini"
+            @click="handleUpdate(row.id)"
+            @dblclick.native.stop=""
+          >
             编辑
           </el-button>
         </template>
@@ -97,10 +107,13 @@ export default {
     this.getList();
   },
   methods: {
-    getList() {
+    getList(flag = false) {
       getPaperList(this.listQuery).then((res) => {
         if (res) {
           this.list = res.data;
+          if (flag) {
+            this.$message.success("查找成功！");
+          }
         }
       });
     },
@@ -150,7 +163,7 @@ export default {
       console.log("update");
     },
     handleFilter() {
-      this.getList();
+      this.getList(true);
     },
     handleCreate() {
       this.dialogFormVisible = true;

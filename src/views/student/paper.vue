@@ -346,21 +346,34 @@ export default {
       //     loading.close();
       //   }, 2000);
       // }
-
-      saveStudentPaper(this.temp).then((res) => {
-        if (res) {
-          if (loading) {
-            setTimeout(() => {
-              loading.close();
-            }, 1000);
-          }
-          this.$message.success("交卷成功");
-          this.isSys = true;
-          setTimeout(() => {
-            this.$router.push("/student/exam");
-          }, 1000);
-        }
-      });
+      this.$confirm("确认提交试卷?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          saveStudentPaper(this.temp).then((res) => {
+            if (res) {
+              if (loading) {
+                setTimeout(() => {
+                  loading.close();
+                }, 1000);
+              }
+              this.$message.success("交卷成功");
+              this.isSys = true;
+              setTimeout(() => {
+                this.$router.push("/student/exam");
+              }, 1000);
+            }
+          });
+        })
+        .catch(() => {
+          this.submit = false;
+          this.$message({
+            type: "info",
+            message: "已取消交卷",
+          });
+        });
     },
     // 将答案数组转为字符串,并排序
     answerArrToStr(arr) {

@@ -1,7 +1,7 @@
 <template>
-  <div class="app-container">
-    <el-card>
-      <h3>{{ temp.paperTitle }}</h3>
+  <div class="app-container handlePublish">
+    <el-card class="handlePublish__card">
+      <h3 style="text-align: center">{{ temp.paperTitle }}</h3>
       <el-form
         ref="form"
         :model="temp"
@@ -10,8 +10,19 @@
         :rules="rules"
       >
         <el-form-item label="发放对象">
+          <div style="display: flex; flex-wrap: wrap; max-width: 300px">
+            <el-tag
+              v-for="(item, value) in chooseClass"
+              :key="value"
+              :closable="true"
+              @close="closeTag(item)"
+              style="margin-right: 5px; margin-bottom: 5px"
+              >{{ item }}</el-tag
+            >
+          </div>
+
           <el-button type="primary" round @click="dialogFormVisible = true"
-            >+添加发放对象
+            >+添加
           </el-button>
         </el-form-item>
         <el-form-item label="发放时间" prop="timeStart">
@@ -51,7 +62,11 @@
       </el-form>
     </el-card>
 
-    <el-dialog title="选择发放班级" :visible.sync="dialogFormVisible">
+    <el-dialog
+      title="选择发放班级"
+      :visible.sync="dialogFormVisible"
+      width="30%"
+    >
       <el-tree
         ref="class"
         :data="data"
@@ -61,6 +76,11 @@
         node-key="id"
       >
       </el-tree>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogFormVisible = false"
+          >确 定</el-button
+        >
+      </span>
     </el-dialog>
   </div>
 </template>
@@ -104,6 +124,8 @@ export default {
       },
       // 班级
       data: [],
+      // 已选班级名称
+      chooseClass: [],
     };
   },
   created() {
@@ -161,10 +183,44 @@ export default {
     },
     getClassChecked() {
       this.temp.classIds = this.$refs.class.getCheckedKeys();
+      this.chooseClass = [];
+      this.data.forEach((item) => {
+        if (this.temp.classIds.includes(item.id)) {
+          this.chooseClass.push(item.title);
+        }
+      });
+    },
+    // TODO
+    closeTag(tag) {
+      this.chooseClass.splice(this.chooseClass.indexOf(tag), 1);
     },
   },
 };
 </script>
 
-<style>
+<style lang="scss">
+.handlePublish {
+  height: 620px;
+  .el-card {
+    height: 100%;
+  }
+}
+</style>
+<style scoped lang="scss">
+.handlePublish {
+  h3 {
+    font-size: 30px;
+  }
+  .handlePublish__card {
+    display: flex;
+    justify-content: center;
+    .el-input {
+      width: 220px;
+      margin-right: 10px;
+    }
+    .el-table {
+      margin-top: 20px;
+    }
+  }
+}
 </style>

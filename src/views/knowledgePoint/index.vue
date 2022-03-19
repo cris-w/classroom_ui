@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="app-container knowledgePoint">
     <!-- 筛选款 & 添加按钮 -->
     <el-input
       placeholder="输入关键字进行过滤"
@@ -243,5 +243,31 @@ export default {
 }
 .addBtn {
   margin-left: 10px;
+}
+</style>
+<style lang="scss">
+.el-tree-node__content {
+  height: 30px;
+}
+/*tree组件选中背景色修改 */
+.el-tree-node.is-current > .el-tree-node__content {
+  background-color: rgb(228, 255, 240) !important;
+  position: relative;
+  color: rgb(80, 177, 121);
+  font-weight: bold;
+}
+
+/*tree组件鼠标hover悬浮背景色 */
+.el-tree-node > .el-tree-node__content:hover {
+  background-color: rgb(228, 255, 240) !important;
+  color: rgb(80, 177, 121);
+}
+.custom-tree-node {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  padding-right: 8px;
 }
 </style>
