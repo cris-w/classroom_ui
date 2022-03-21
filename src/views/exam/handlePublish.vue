@@ -190,8 +190,13 @@ export default {
         }
       });
     },
-    // TODO
     closeTag(tag) {
+      // 移除选择的节点
+      let node = this.data.filter((val) => {
+        return val.title == tag;
+      });
+      this.$refs.class.setChecked(node[0].id, false);
+      // 移除tag
       this.chooseClass.splice(this.chooseClass.indexOf(tag), 1);
     },
   },

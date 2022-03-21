@@ -34,14 +34,26 @@
       highlight-current-row
     >
       <el-table-column align="center" label="姓名" prop="studentName" />
-      <el-table-column align="center" label="分数" prop="score" />
+      <el-table-column align="center" label="分数">
+        <template slot-scope="{ row }">
+          <span
+            style="color: rgb(126, 191, 80)"
+            v-if="isPass(row.score, row.totalScore)"
+            >{{ row.score }}</span
+          >
+          <span style="color: red" v-if="!isPass(row.score, row.totalScore)">{{
+            row.score
+          }}</span>
+          / {{ row.totalScore }}
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="批阅时间">
         <template slot-scope="{ row }"> {{ row.readTime || "---" }} </template>
       </el-table-column>
       <el-table-column align="center" label="批阅人">
         <template slot-scope="{ row }"> {{ row.readName || "---" }} </template>
       </el-table-column>
-      <el-table-column align="center" label="状态">
+      <el-table-column align="center" label="状态" sortable :sort-method="sort">
         <template slot-scope="{ row }">
           <el-tag type="success" v-if="row.state == 1">已批阅</el-tag>
           <el-tag type="danger" v-else>未批阅</el-tag>
@@ -90,6 +102,18 @@ export default {
         this.filterList = this.list;
         this.listLoading = false;
       });
+    },
+    // 是否及格
+    isPass(score, totalScore) {
+      if (score >= totalScore * 0.6) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    // 排序
+    sort(a, b) {
+      return a - b;
     },
     // 搜索
     handleFilter() {

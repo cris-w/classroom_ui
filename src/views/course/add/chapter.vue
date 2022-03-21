@@ -54,7 +54,21 @@
             placeholder=""
           />
         </el-form-item>
-        <el-form-item label="上传视频" label-width="120px">
+        <el-form-item label="视频" label-width="120px">
+          <!-- <a :href="video.videoSource" target="_blank">点击查看视频</a> -->
+          <el-link
+            :href="video.videoSource"
+            target="_blank"
+            :underline="false"
+            v-if="video.videoOriginName"
+            >点击查看<i class="el-icon-view el-icon--right"></i>
+          </el-link>
+          <i
+            v-if="video.videoOriginName"
+            class="el-icon-delete"
+            style="margin-left: 70px"
+            @click="handleVodRemove"
+          ></i>
           <el-upload
             :headers="headers"
             :action="BASE_API + 'oos/fileOos/uploadVideo'"
@@ -64,6 +78,7 @@
             :on-exceed="handleUploadExceed"
             :file-list="fileList"
             :limit="1"
+            v-show="video.show"
           >
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">
@@ -198,6 +213,7 @@ export default {
         sort: 0,
         videoSource: "",
         videoOriginName: "",
+        show: true,
       };
       this.fileList = [];
     },
@@ -222,7 +238,7 @@ export default {
     },
     addVideo() {
       addVideo(this.video).then((res) => {
-        if (res.code === 200) {
+        if (res) {
           this.$notify({
             title: "Success",
             message: "添加成功",
@@ -236,7 +252,7 @@ export default {
     },
     updateVideo() {
       updateVideo(this.video).then((res) => {
-        if (res.code === 200) {
+        if (res) {
           this.$notify({
             title: "Success",
             message: "修改成功",
@@ -256,19 +272,20 @@ export default {
     handleVodUploadSuccess(response, file, fileList) {
       this.video.videoSource = response.data.videoSource;
       this.video.videoOriginName = response.data.videoOriginName;
-      console.log(this.video);
     },
     beforeVodRemove(file) {
       return this.$confirm(`确定移除 ${file.name}？`);
     },
     handleVodRemove() {
-      deleteVideo(this.vidoe.videoOriginName).then((res) => {
+      deleteVideo(this.video.videoOriginName).then((res) => {
         this.$message.success("删除视频成功^-^");
         // 清空视屏地址 以及 名称
         this.video.videoSource = "";
         this.video.videoOriginName = "";
         // 清空视屏列表
         this.fileList = [];
+        // 显示删除组件
+        this.video.show = true;
       });
     },
     handleUploadExceed(files, fileList) {
@@ -343,7 +360,7 @@ export default {
       if (data.children) {
         // 章节
         getChapterById(data.id).then((res) => {
-          if (res.code === 200) {
+          if (res) {
             this.chapter = res.data;
             this.chapterDialogFormVisible = true;
           }
@@ -352,8 +369,14 @@ export default {
         // 小节
         this.fileList = [];
         getVideoById(data.id).then((res) => {
-          if (res.code === 200) {
+          if (res) {
             this.video = res.data;
+            // 是否展示上传视频组件
+            if (this.video.videoOriginName) {
+              this.video.show = false;
+            } else {
+              this.video.show = true;
+            }
             this.videoDialogFormVisible = true;
           }
         });
