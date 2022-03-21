@@ -57,7 +57,7 @@
           <el-button
             type="primary"
             size="mini"
-            @click="handleUpdate(row.id)"
+            @click="handleUpdate(row)"
             @dblclick.native.stop=""
           >
             编辑
@@ -159,8 +159,14 @@ export default {
         path: `/exam/handlePublish/${JSON.stringify(clazz)}`,
       });
     },
-    handleUpdate() {
-      console.log("update");
+    handleUpdate(row) {
+      let paper = {}
+      paper.paperId = row.id;
+      paper.title = row.title;
+      this.$router.push({
+        path: "/exam/createHand",
+        query: { paper: `${JSON.stringify(paper)}`},
+      });
     },
     handleFilter() {
       this.getList(true);

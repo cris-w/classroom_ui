@@ -26,10 +26,23 @@
           </a>
           <ul class="question__title">
             <li v-for="(item, index) in temp.singleChoiceList" :key="item.id">
-              {{ index + 1 }}.({{ item.score }}分)
-              <span @click="getQuestionInfo(item.id, index + 1, item.score)">{{
-                item.title
-              }}</span>
+              <!-- 题号&题目 -->
+              <div style="display: flex">
+                {{ index + 1 }}.({{ item.score }}分)
+                <div
+                  @click="getQuestionInfo(item.id, index + 1, item.score)"
+                  class="question_title_li"
+                >
+                  {{ item.title }}
+                </div>
+              </div>
+              <div>
+                <i
+                  class="el-icon-delete"
+                  style="margin-right: 10px"
+                  @click="removeItem(item, index)"
+                ></i>
+              </div>
             </li>
           </ul>
         </div>
@@ -41,10 +54,21 @@
           </a>
           <ul class="question__title">
             <li v-for="(item, index) in temp.mutliChoiceList" :key="item.id">
-              {{ index + 1 }}.({{ item.score }}分)
-              <span @click="getQuestionInfo(item.id, index + 1, item.score)">{{
-                item.title
-              }}</span>
+              <!-- 题号&题目 -->
+              <div style="display: flex">
+                {{ index + 1 }}.({{ item.score }}分)
+                <div
+                  @click="getQuestionInfo(item.id, index + 1, item.score)"
+                  class="question_title_li"
+                >
+                  {{ item.title }}
+                </div>
+              </div>
+              <i
+                class="el-icon-delete"
+                style="margin-right: 10px"
+                @click="removeItem(item, index)"
+              ></i>
             </li>
           </ul>
         </div>
@@ -56,10 +80,21 @@
           </a>
           <ul class="question__title">
             <li v-for="(item, index) in temp.completionList" :key="item.id">
-              {{ index + 1 }}.({{ item.score }}分)
-              <span @click="getQuestionInfo(item.id, index + 1, item.score)">{{
-                item.title
-              }}</span>
+              <!-- 题号&题目 -->
+              <div style="display: flex">
+                {{ index + 1 }}.({{ item.score }}分)
+                <div
+                  @click="getQuestionInfo(item.id, index + 1, item.score)"
+                  class="question_title_li"
+                >
+                  {{ item.title }}
+                </div>
+              </div>
+              <i
+                class="el-icon-delete"
+                style="margin-right: 10px"
+                @click="removeItem(item, index)"
+              ></i>
             </li>
           </ul>
         </div>
@@ -92,15 +127,29 @@
           <div class="context__title">
             <!-- 1 (单选题) -->
             <div v-if="question.type === 0">
-              <b style="margin-right: 20px">{{ question.index }}</b>
               <!-- 题目title -->
               <div class="main__title">
-                <span>(单选题，{{ question.score }}分)</span>
-                <br />
-                <p style="margin-left: 20px; font-size: 16px">
-                  {{ question.title }}
-                </p>
+                <b style="margin-right: 20px">{{ question.index }}</b>
+                <div>
+                  (单选题，
+                  <el-input
+                    v-model="question.score"
+                    :disabled="question.disabled"
+                    style="max-width: 50px; margin-right: 10px"
+                    @blur="handleSetScore(question)"
+                  ></el-input
+                  >分)
+                  <el-button
+                    type="text"
+                    style="margin-left: 50px"
+                    @click="setScore(question)"
+                    >编辑</el-button
+                  >
+                </div>
               </div>
+              <p style="margin-left: 20px; font-size: 16px">
+                {{ question.title }}
+              </p>
               <!-- 题目选项 -->
               <div class="main__answer">
                 <el-radio-group v-model="question.answer">
@@ -122,15 +171,28 @@
             </div>
             <!-- 2 (多选题) -->
             <div v-if="question.type === 1">
-              <b style="margin-right: 20px">{{ question.index }}</b>
-              <!-- 题目title -->
               <div class="main__title">
-                <span>(多选题，{{ question.score }}分)</span>
-                <br />
-                <p style="margin-left: 20px; font-size: 16px">
-                  {{ question.title }}
-                </p>
+                <b style="margin-right: 20px">{{ question.index }}</b>
+                <div>
+                  (多选题，
+                  <el-input
+                    v-model="question.score"
+                    :disabled="question.disabled"
+                    style="max-width: 50px; margin-right: 10px"
+                    @blur="handleSetScore(question)"
+                  ></el-input
+                  >分)
+                  <el-button
+                    type="text"
+                    style="margin-left: 50px"
+                    @click="setScore(question)"
+                    >编辑</el-button
+                  >
+                </div>
               </div>
+              <p style="margin-left: 20px; font-size: 16px">
+                {{ question.title }}
+              </p>
               <!-- 题目选项 -->
               <div class="main__answer">
                 <el-checkbox-group v-model="question.answer">
@@ -151,15 +213,28 @@
             </div>
             <!-- 3 (简答题) -->
             <div v-if="question.type === 2">
-              <b style="margin-right: 20px">{{ question.index }}</b>
-              <!-- 题目title -->
               <div class="main__title">
-                <span>(简答题，{{ question.score }}分)</span>
-                <br />
-                <p style="margin-left: 20px; font-size: 16px">
-                  {{ question.title }}
-                </p>
+                <b style="margin-right: 20px">{{ question.index }}</b>
+                <div>
+                  (简答题，
+                  <el-input
+                    v-model="question.score"
+                    :disabled="question.disabled"
+                    style="max-width: 50px; margin-right: 10px"
+                    @blur="handleSetScore(question)"
+                  ></el-input
+                  >分)
+                  <el-button
+                    type="text"
+                    style="margin-left: 50px"
+                    @click="setScore(question)"
+                    >编辑</el-button
+                  >
+                </div>
               </div>
+              <p style="margin-left: 20px; font-size: 16px">
+                {{ question.title }}
+              </p>
               <!-- 题目选项 -->
               <div class="main__answer">答案：{{ question.answer }}</div>
             </div>
@@ -186,7 +261,12 @@
 </template>
 
 <script>
-import { getQuestionById, createPaper } from "@/api/edu/exam";
+import {
+  getQuestionById,
+  createPaper,
+  listPaperQuestion,
+  updatePaper,
+} from "@/api/edu/exam";
 import { mapGetters } from "vuex";
 export default {
   name: "createHand",
@@ -195,6 +275,7 @@ export default {
   },
   data() {
     return {
+      paperId: undefined,
       // 提交给后端的Bo
       paper: {
         title: "新建试卷20220227145133",
@@ -228,13 +309,23 @@ export default {
         level: 0,
         knowledge: [],
       },
+      // 当前题目分数
+      cur: 0,
       // 添加题目类型
       questionType: 0,
       model: 0,
       word: ["A", "B", "C", "D", "E", "F", "G"],
     };
   },
-  created() {},
+  created() {
+    // 获取路由中的ID
+    if (this.$route.query && this.$route.query.paper) {
+      let paper = JSON.parse(this.$route.query.paper);
+      this.paperId = paper.paperId;
+      this.paper.title = paper.title;
+      this.getQuestionList();
+    }
+  },
   activated() {
     if (this.$route.params && this.$route.params.select) {
       this.$route.params.select.forEach((val) => {
@@ -299,6 +390,7 @@ export default {
     resetQuestion() {
       this.question = {
         index: -1,
+        disabled: true,
         type: 0,
         score: 0,
         title: "",
@@ -310,6 +402,34 @@ export default {
     resetPaper() {
       this.paper.questionList = [];
     },
+    getQuestionList() {
+      listPaperQuestion(this.paperId).then((res) => {
+        if (res) {
+          const { data } = res;
+          data.forEach((val) => {
+            // 如果为单选题
+            if (val.type == 0) {
+              this.temp.singleChoiceList.push(val);
+              this.temp.singleScore = this.temp.singleScore + val.score;
+              this.temp.total++;
+            }
+            // 如果为多选
+            else if (val.type == 1) {
+              this.temp.mutliChoiceList.push(val);
+              this.temp.mutliScore = this.temp.mutliScore + val.score;
+              this.temp.total++;
+            }
+            // 如果为简答
+            else if (val.type == 2) {
+              this.temp.completionList.push(val);
+              this.temp.completionScore = this.temp.completionScore + val.score;
+              this.temp.total++;
+            }
+          });
+        }
+      });
+    },
+    // 导入题目
     importQuestion() {
       if (this.model) {
         this.$router.push({ path: `/exam/questionBank/${this.model}` });
@@ -325,10 +445,12 @@ export default {
       });
       return ids.indexOf(id);
     },
+    // 获取题目信息
     getQuestionInfo(id, index, score) {
       this.resetQuestion();
       this.question.index = index;
       this.question.score = score;
+      this.question.disabled = true;
       getQuestionById(id).then((res) => {
         const { data } = res;
         this.question.type = data.type;
@@ -344,6 +466,7 @@ export default {
         this.question.options = data.options;
       });
     },
+    // 创建/更新 试卷
     createPaper() {
       this.resetPaper();
       this.paper.teacherName = this.name;
@@ -384,15 +507,83 @@ export default {
         this.$message.warning("您还未添加题目");
         return;
       } else {
-        createPaper(this.paper).then((res) => {
-          if (res) {
-            this.$message.success("创建成功，请去试卷库发布");
-            setTimeout(() => {
-              this.$router.push({ path: "/exam/bank" });
-            }, 2000);
-          }
-        });
+        if (this.paperId) {
+          this.paper.id = this.paperId;
+          updatePaper(this.paper).then((res) => {
+            if (res) {
+              this.$message.success("修改成功");
+              setTimeout(() => {
+                this.$router.push({ path: "/exam/bank" });
+              }, 1500);
+            }
+          });
+        } else {
+          createPaper(this.paper).then((res) => {
+            if (res) {
+              this.$message.success("创建成功，请去试卷库发布");
+              setTimeout(() => {
+                this.$router.push({ path: "/exam/bank" });
+              }, 1500);
+            }
+          });
+        }
       }
+    },
+    // 删除题目
+    removeItem(item, index) {
+      // 单选
+      if (item.type == 0) {
+        this.temp.singleChoiceList.splice(index, 1);
+        this.temp.singleScore -= item.score;
+      }
+      // 多选
+      else if (item.type == 1) {
+        this.temp.mutliChoiceList.splice(index, 1);
+        this.temp.mutliScore -= item.score;
+      }
+      // 简答
+      else {
+        this.temp.completionList.splice(index, 1);
+        this.temp.completionScore -= item.score;
+      }
+      this.temp.total--;
+      // this.$forceUpdate(this.temp);
+    },
+    // 设置分数
+    setScore(question) {
+      question.disabled = !question.disabled;
+      this.cur = question.score;
+    },
+    handleSetScore(question) {
+      if (!/^\d+$/.test(question.score)) {
+        this.$message.error("请输入正整数");
+        question.score = this.cur;
+      } else {
+        if (question.type === 0) {
+          //单选
+          this.temp.singleChoiceList[question.index - 1].score = question.score;
+          this.temp.singleScore =
+            this.temp.singleScore -
+            parseInt(this.cur) +
+            parseInt(question.score);
+        } else if (question.type === 1) {
+          // 多选
+          this.temp.mutliChoiceList[question.index - 1].score = question.score;
+          this.temp.mutliScore =
+            this.temp.mutliScore -
+            parseInt(this.cur) +
+            parseInt(question.score);
+        } else {
+          // 简答
+          this.temp.completionList[question.index - 1].score = question.score;
+          this.temp.completionScore =
+            this.temp.completionScore -
+            parseInt(this.cur) +
+            parseInt(question.score);
+        }
+        this.$message.success("修改成功");
+      }
+      question.disabled = true;
     },
   },
 
@@ -402,6 +593,15 @@ export default {
   beforeRouteLeave(to, from, next) {
     if (to.name === "paperBank") {
       this.$destroy();
+    }
+    next();
+  },
+  beforeRouteEnter(to, from, next) {
+    // ...
+    if (JSON.stringify(to.query) !== "{}") {
+      to.meta.title = "更新试卷";
+    } else {
+      to.meta.title = "创建试卷";
     }
     next();
   },
@@ -438,8 +638,20 @@ export default {
         color: #646873;
         font-size: 13px;
         margin: 10px 0;
+        .question_title_li {
+          width: 150px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          &:hover {
+            color: rgb(46, 167, 236);
+          }
+        }
         li {
-          margin: 5px 0;
+          margin: 7px 0;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
         }
       }
     }
@@ -468,7 +680,9 @@ export default {
       .context__title {
         font-size: 14px;
         .main__title {
-          display: inline;
+          // display: inline;
+          display: flex;
+          align-items: center;
         }
       }
       .main__answer {
@@ -516,6 +730,18 @@ export default {
 .left {
   .el-card__body {
     padding: 12px 0 0 16px;
+  }
+  .question__title {
+    .el-icon-delete {
+      &:hover {
+        color: red;
+      }
+    }
+    .el-icon-edit {
+      &:hover {
+        color: rgb(46, 167, 236);
+      }
+    }
   }
 }
 .main__answer {

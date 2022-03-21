@@ -136,6 +136,23 @@ export function createPaper(paperBo) {
     })
 }
 
+// 修改试卷
+export function updatePaper(paperBo) {
+    return request({
+        url: '/edu/examPaper/update',
+        method: 'post',
+        data: paperBo
+    })
+}
+
+// 修改试卷的回显
+export function listPaperQuestion(paperId) {
+    return request({
+        url: `/edu/examPaper/listPaperQuestionByPaperId/${paperId}`,
+        method: 'get'
+    })
+}
+
 //  发布试卷
 export function publishPaper(examBo) {
     return request({
@@ -235,3 +252,4 @@ export function removeExamById(paperId, studentId) {
         method: 'get'
     })
 }
+
