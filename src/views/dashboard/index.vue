@@ -1,7 +1,9 @@
 <template>
   <div class="dashboard-container">
     <!-- 管理员及老师 -->
-    <div class="dashboard-text" v-if="hasRole()">name: {{ name }}</div>
+    <div class="dashboard-text" v-if="hasRole()">
+      <adminDashboard />
+    </div>
 
     <!-- 学生 -->
     <div v-if="!hasRole()">
@@ -71,12 +73,14 @@
 </template>
 
 <script>
+import adminDashboard from "./admin";
 import { mapGetters } from "vuex";
 import { getClassIdByStudentId, joinClass } from "@/api/edu/class";
 import { getCourseByClassId, getClassList } from "@/api/edu/course";
 
 export default {
   name: "Dashboard",
+  components: { adminDashboard },
   computed: {
     ...mapGetters(["name", "roles", "id"]),
   },
@@ -155,9 +159,6 @@ export default {
 
 <style lang="scss" scoped>
 .dashboard {
-  &-container {
-    margin: 30px;
-  }
   &-text {
     font-size: 30px;
     line-height: 46px;

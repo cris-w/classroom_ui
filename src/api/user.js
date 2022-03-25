@@ -33,5 +33,13 @@ export function getNav() {
   return request({
     url: 'sys/menu/nav',
     method: 'get'
-  }) 
+  })
+}
+
+export function register(user) {
+  return request({
+    url: "/sys/user/register",
+    method: "post",
+    data: user
+  })
 }

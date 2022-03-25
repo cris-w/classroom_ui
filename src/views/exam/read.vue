@@ -34,7 +34,13 @@
       highlight-current-row
     >
       <el-table-column align="center" label="姓名" prop="studentName" />
-      <el-table-column align="center" label="分数">
+      <el-table-column
+        align="center"
+        label="分数"
+        prop="score"
+        sortable
+        sort-by="score"
+      >
         <template slot-scope="{ row }">
           <span
             style="color: rgb(126, 191, 80)"

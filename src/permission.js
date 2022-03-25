@@ -40,7 +40,10 @@ router.beforeEach(async (to, from, next) => {
           const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
 
           // 将动态路由加入到路由中
-          router.addRoutes(accessRoutes)
+          // router.addRoutes(accessRoutes)
+          for (let i = 0; i < accessRoutes.length; i++) {
+            router.addRoute(accessRoutes[i])
+          }
 
           next({ ...to, replace: true })
         } catch (error) {
