@@ -21,6 +21,16 @@
       >
         搜索
       </el-button>
+      <el-button
+        class="filter-item"
+        :loading="downloadLoading"
+        type="primary"
+        icon="el-icon-document"
+        round
+        @click="handleDownload"
+      >
+        导出Excel
+      </el-button>
     </div>
 
     <!-- table -->
@@ -79,6 +89,7 @@
 
 <script>
 import { listStudentExamById, removeExamById } from "@/api/edu/exam";
+import { parseTime } from "@/utils";
 export default {
   name: "ReadPaper",
   data() {
@@ -91,6 +102,7 @@ export default {
       list: [],
       // 筛选后的数据
       filterList: [],
+      downloadLoading: false,
     };
   },
   created() {
@@ -163,6 +175,35 @@ export default {
             message: "已取消打回",
           });
         });
+    },
+    // 导出excel
+    handleDownload() {
+      this.downloadLoading = true;
+      import("@/vendor/Export2Excel").then((excel) => {
+        const tHeader = ["姓名", "分数"];
+        const filterVal = ["studentName", "score"];
+        const list = this.list;
+        const data = this.formatJson(filterVal, list);
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: "scope",
+          autoWidth: true,
+          bookType: "xlsx",
+        });
+        this.downloadLoading = false;
+      });
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map((v) =>
+        filterVal.map((j) => {
+          if (j === "timestamp") {
+            return parseTime(v[j]);
+          } else {
+            return v[j];
+          }
+        })
+      );
     },
   },
 };
