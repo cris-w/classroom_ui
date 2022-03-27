@@ -139,7 +139,7 @@ export default {
     },
     // 添加子节点
     handleCreate(data) {
-      console.log(data);
+      // console.log(data);
       this.resetTemp();
       this.temp.parentId = data.id;
       this.dialogStatus = "create";
@@ -160,7 +160,7 @@ export default {
     },
     remove(data) {
       this.getChildrenIds(data);
-      console.log(this.delIds);
+      // console.log(this.delIds);
       this.$confirm(
         "若该知识点下存在子级知识点将一并删除，确认删除？",
         "提示",

@@ -117,7 +117,7 @@ export default {
           // 如果班级ID为 -1 则没有课程
           if (res.data != -1) {
             getCourseByClassId(res.data).then((res) => {
-              console.log(res.data);
+              // console.log(res.data);
               this.courseList = res.data;
             });
           } else {
@@ -130,7 +130,7 @@ export default {
       getClassList().then((res) => {
         if (res) {
           this.classList = res.data;
-          console.log(this.classList);
+          // console.log(this.classList);
         }
       });
     },

@@ -162,6 +162,13 @@ export function publishPaper(examBo) {
     })
 }
 
+export function getTimeLimit(paperId, classId) {
+    return request({
+        url: `/edu/examPaper/getTimeLimit/${paperId}/${classId}`,
+        method: 'get'
+    })
+}
+
 //  通过试卷ID 获取发布班级ID
 export function listClassIdsByPaperId(paperId) {
     return request({

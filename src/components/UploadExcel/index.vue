@@ -140,7 +140,7 @@ export default {
       return /\.(xlsx|xls|csv)$/.test(file.name);
     },
     uploadFile(file) {
-      console.log(file);
+      // console.log(file);
       addUserBatch(file)
         .then((res) => {
           if (res.code === 200) {

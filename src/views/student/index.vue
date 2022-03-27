@@ -146,7 +146,7 @@ export default {
       getClassList().then((res) => {
         if (res) {
           this.classList = res.data;
-          console.log(this.classList);
+          // console.log(this.classList);
         }
       });
     },

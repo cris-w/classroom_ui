@@ -9,6 +9,12 @@
       <div class="app-container__title">试卷详情</div>
       <el-card class="app-container__main">
         <div class="main-title">{{ paper.title }}</div>
+        <div class="count-down">
+          <i class="el-icon-alarm-clock"></i>
+          <Countdown :time="time" format="hh:mm:ss" @on-end="onCountdownEnd">
+            <template slot-scope="{ time }">{{ time }}</template>
+          </Countdown>
+        </div>
         <!-- 单选 -->
         <div class="main-question" v-if="paper.singleChoiceList.length > 0">
           <div class="main-single--title">
@@ -124,7 +130,7 @@
         </div>
         <el-button
           type="text"
-          @click="submitPaper"
+          @click="submitPaper(false, false)"
           class="subBtn"
           :loading="submit"
           >交卷</el-button
@@ -136,16 +142,19 @@
 
 <script>
 import { mapGetters } from "vuex";
+import Countdown from "@choujiaojiao/vue2-countdown";
 import {
   getPaperQuestionById,
   saveStudentPaper,
   listByStudentId,
+  getTimeLimit,
 } from "@/api/edu/exam";
 export default {
   name: "StudentPaper",
   computed: {
     ...mapGetters(["id"]),
   },
+  components: { Countdown },
   data() {
     return {
       paperId: undefined,
@@ -183,6 +192,8 @@ export default {
       leave: false,
       // 是否为系统跳转路由
       isSys: false,
+      // 考试限制时间 秒
+      time: 0,
     };
   },
   mounted() {
@@ -194,6 +205,7 @@ export default {
       this.paperId = this.$route.params.paperId;
       this.classId = this.$route.params.classId;
       this.listByStudentId();
+      this.getTimeLimit();
     }
   },
   beforeRouteLeave(to, from, next) {
@@ -234,6 +246,7 @@ export default {
       getPaperQuestionById(this.paperId).then((res) => {
         if (res) {
           const { data } = res;
+          // console.log(data);
           this.paper.title = data.title;
           this.paper.description = data.description;
           let single = data.choices;
@@ -254,6 +267,14 @@ export default {
                 this.paper.completionScore + val.score;
             });
           }
+        }
+      });
+    },
+    // 获取考试限制时间
+    getTimeLimit() {
+      getTimeLimit(this.paperId, this.classId).then((res) => {
+        if (res) {
+          this.time = parseInt(res.data) * 60;
         }
       });
     },
@@ -279,7 +300,7 @@ export default {
       });
     },
     // 提交试卷
-    submitPaper(loading) {
+    submitPaper(loading, over) {
       this.submit = true;
       this.resetTemp();
       // 处理单选题
@@ -339,41 +360,52 @@ export default {
         question.totalScore = this.paper.completionList[i].score;
         this.temp.questionList.push(question);
       }
-      console.log(this.temp);
-
-      // if (loading) {
-      //   setTimeout(() => {
-      //     loading.close();
-      //   }, 2000);
-      // }
-      this.$confirm("确认提交试卷?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(() => {
-          saveStudentPaper(this.temp).then((res) => {
-            if (res) {
-              if (loading) {
-                setTimeout(() => {
-                  loading.close();
-                }, 1000);
-              }
+      // 是否为作弊强制交卷
+      if (loading) {
+        saveStudentPaper(this.temp).then((res) => {
+          if (res) {
+            this.isSys = true;
+            setTimeout(() => {
               this.$message.success("交卷成功");
-              this.isSys = true;
-              setTimeout(() => {
-                this.$router.push("/student/exam");
-              }, 1000);
-            }
-          });
-        })
-        .catch(() => {
-          this.submit = false;
-          this.$message({
-            type: "info",
-            message: "已取消交卷",
-          });
+              loading.close();
+              this.$router.push("/student/exam");
+            }, 1500);
+          }
         });
+      } else {
+        // 是否为超时交卷
+        if (over) {
+          this.savePaper();
+        } else {
+          this.$confirm("确认提交试卷?", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning",
+          })
+            .then(() => {
+              this.savePaper();
+            })
+            .catch(() => {
+              this.submit = false;
+              this.$message({
+                type: "info",
+                message: "已取消交卷",
+              });
+            });
+        }
+      }
+    },
+    // 将试卷保存数据库
+    savePaper() {
+      saveStudentPaper(this.temp).then((res) => {
+        if (res) {
+          this.$message.success("交卷成功");
+          this.isSys = true;
+          setTimeout(() => {
+            this.$router.push("/student/exam");
+          }, 1000);
+        }
+      });
     },
     // 将答案数组转为字符串,并排序
     answerArrToStr(arr) {
@@ -401,6 +433,7 @@ export default {
             type: "warning",
             callback: () => {
               this.leave = true;
+              // console.log(this.leave);
               this.$message({
                 type: "info",
                 message: "再次离开将被直接判定为作弊",
@@ -422,6 +455,10 @@ export default {
       });
       this.submitPaper(loading);
     },
+    // 倒计时结束
+    onCountdownEnd() {
+      this.submitPaper(false, true);
+    },
   },
 };
 </script>
@@ -441,6 +478,13 @@ export default {
 .app-container__main {
   margin: 30px auto;
   padding: 30px 40px;
+  .count-down {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    font-size: 24px;
+    color: #646873;
+  }
   .main-title {
     width: 800px;
     font-size: 18px;

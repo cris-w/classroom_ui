@@ -266,7 +266,7 @@ export default {
             this.paper.description = this.temp.descriptioin;
             this.paper.totalScore = this.temp.totalScore;
             this.getQuestionList();
-            console.log(this.paper);
+            // console.log(this.paper);
             createPaper(this.paper).then((res) => {
               if (res) {
                 this.$message.success("创建成功，请去试卷库发布");
